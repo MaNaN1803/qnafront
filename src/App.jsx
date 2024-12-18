@@ -36,6 +36,7 @@ const App = () => {
               path="/submit-question"
               element={
                 <PrivateRoute>
+                  {isAuthenticated && <Navbar />}
                   <SubmitQuestion />
                 </PrivateRoute>
               }
@@ -44,6 +45,7 @@ const App = () => {
               path="/questions"
               element={
                 <PrivateRoute>
+                  {isAuthenticated && <Navbar />}
                   <QuestionList />
                 </PrivateRoute>
               }
@@ -52,6 +54,7 @@ const App = () => {
               path="/search"
               element={
                 <PrivateRoute>
+                  {isAuthenticated && <Navbar />}
                   <SearchResults />
                 </PrivateRoute>
               }
@@ -60,6 +63,7 @@ const App = () => {
               path="/questions/unanswered"
               element={
                 <PrivateRoute>
+                  {isAuthenticated && <Navbar />}
                   <UnansweredQuestions />
                 </PrivateRoute>
               }
@@ -68,6 +72,7 @@ const App = () => {
               path="/profile"
               element={
                 <PrivateRoute>
+                  {isAuthenticated && <Navbar />}
                   <Profile />
                 </PrivateRoute>
               }
@@ -76,6 +81,7 @@ const App = () => {
               path="/questions/:id"
               element={
                 <PrivateRoute>
+                  {isAuthenticated && <Navbar />}
                   <AnswerQuestion />
                 </PrivateRoute>
               }
@@ -84,6 +90,7 @@ const App = () => {
               path="/admin"
               element={
                 <PrivateRoute>
+                  {isAuthenticated && <Navbar />}
                   <AdminDashboard />
                 </PrivateRoute>
               }
@@ -92,6 +99,7 @@ const App = () => {
               path="/moderator"
               element={
                 <PrivateRoute>
+                  {isAuthenticated && <Navbar />}
                   <ModeratorDashboard />
                 </PrivateRoute>
               }
