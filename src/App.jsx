@@ -19,7 +19,6 @@ const App = () => {
   return (
     <Router>
       <div className="min-h-screen bg-gray-100">
-        {isAuthenticated && <Navbar />}
         <div className="container mx-auto py-6 px-4">
           <Routes>
             <Route path="/login" element={<Login />} />
@@ -28,6 +27,7 @@ const App = () => {
               path="/"
               element={
                 <PrivateRoute>
+                  {isAuthenticated && <Navbar />}
                   <Home />
                 </PrivateRoute>
               }
