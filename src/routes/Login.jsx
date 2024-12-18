@@ -13,7 +13,7 @@ const Login = () => {
     try {
       const response = await apiRequest("/auth/login", "POST", { email, password });
       localStorage.setItem("token", response.token);
-      navigate("/home");
+      navigate("/");
     } catch {
       setError("Invalid credentials. Please try again.");
     }
