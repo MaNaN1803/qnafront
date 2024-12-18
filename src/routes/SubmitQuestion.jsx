@@ -60,7 +60,7 @@ const SubmitQuestion = () => {
       images.forEach((image) => form.append('images', image));
 
       await apiRequest('/questions', 'POST', form, token, true); // true for multipart/form-data
-      navigate('/home');
+      navigate('/');
     } catch (error) {
       setError('Failed to submit question. Please try again.');
     }
