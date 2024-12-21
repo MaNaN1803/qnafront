@@ -25,11 +25,9 @@ const QuestionList = () => {
   }, []);
 
   const getImageSrc = (images) => {
-    if (images && images[0] && images[0].startsWith("http")) {
-      return images[0];
-    }
-    if (images && images[0]) {
-      return `http://localhost:5000/${images[0]}`;
+    // For Cloudinary images
+    if (images && images.length > 0) {
+      return images[0]; // Cloudinary URLs are already complete URLs
     }
     return "https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg";
   };
@@ -57,39 +55,30 @@ const QuestionList = () => {
         </Link>
       </div>
 
-      <div className="flex">
+      <div className="flex flex-col lg:flex-row">
         {/* Sidebar */}
-        <div className="w-1/4 pr-4">
+        <div className="lg:w-1/4 lg:pr-4 mb-6 lg:mb-0">
           <div className="bg-white p-4 shadow rounded-lg mb-6">
             <h2 className="text-lg font-semibold mb-4">Categories</h2>
             <ul className="space-y-2">
-              <li>
-                <Link to="/category/general" className="text-blue-500 hover:underline">
-                  General
-                </Link>
-              </li>
-              <li>
-                <Link to="/category/waste-management" className="text-blue-500 hover:underline">
-                  Waste Management
-                </Link>
-              </li>
-              <li>
-                <Link to="/category/road-maintenance" className="text-blue-500 hover:underline">
-                  Road Maintenance
-                </Link>
-              </li>
-              <li>
-                <Link to="/category/public-safety" className="text-blue-500 hover:underline">
-                  Public Safety
-                </Link>
-              </li>
-              {/* Add more categories */}
+              {["General", "Waste Management", "Road Maintenance", "Public Safety",
+                "Environmental", "Healthcare", "Education", "Transportation",
+                "Energy", "Sustainability", "Community"].map((category) => (
+                <li key={category}>
+                  <Link
+                    to={`/category/${category.toLowerCase().replace(" ", "-")}`}
+                    className="text-blue-500 hover:underline block py-1"
+                  >
+                    {category}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
         </div>
 
         {/* Question Feed */}
-        <div className="w-3/4">
+        <div className="lg:w-3/4">
           <h2 className="text-2xl font-semibold mb-4">All Questions</h2>
           {loading ? (
             <p className="text-center text-gray-500">Loading questions...</p>
@@ -98,36 +87,41 @@ const QuestionList = () => {
               {questions.map((question) => (
                 <div
                   key={question._id}
-                  className="bg-white p-4 shadow rounded-lg flex items-start"
+                  className="bg-white p-4 shadow rounded-lg flex flex-col sm:flex-row items-start gap-4"
                 >
                   {/* Thumbnail */}
                   <img
                     src={getImageSrc(question.images)}
-                    alt="Thumbnail"
-                    className="w-16 h-16 rounded-full mr-4"
+                    alt="Question thumbnail"
+                    className="w-16 h-16 rounded-full object-cover"
+                    loading="lazy"
                   />
                   <div className="flex-grow">
                     {/* Question Title */}
                     <Link
                       to={`/questions/${question._id}`}
-                      className="text-lg font-semibold text-blue-500 hover:underline"
+                      className="text-lg font-semibold text-blue-500 hover:underline block"
                     >
                       {question.title}
                     </Link>
                     <p className="text-sm text-gray-600 mt-1">
                       {question.description.slice(0, 100)}...
                     </p>
-                    <div className="text-xs text-gray-500 mt-2">
+                    <div className="text-xs text-gray-500 mt-2 flex flex-wrap gap-2">
                       <span>
                         <strong>Category:</strong> {question.category || "General"}
-                      </span>{" "}
-                      |{" "}
+                      </span>
+                      <span className="hidden sm:inline">•</span>
                       <span>
                         <strong>Created:</strong> {formatDate(question.createdAt)}
                       </span>
+                      <span className="hidden sm:inline">•</span>
+                      <span>
+                        <strong>Posted by:</strong> {question.user?.name || "Anonymous"}
+                      </span>
                     </div>
                   </div>
-                  <div className="text-sm text-gray-500 text-right ml-4">
+                  <div className="text-sm text-gray-500 text-right">
                     <p>
                       <strong>Answers:</strong> {question.answersCount || 0}
                     </p>
@@ -156,21 +150,21 @@ const QuestionList = () => {
       </div>
 
       {/* Footer */}
-      <footer className="mt-8 bg-gray-100 p-4 text-center text-gray-500">
-        <p>&copy; 2024 Q&A Hub. All rights reserved.</p>
-        <p>
+      <footer className="mt-8 bg-gray-100 p-4 rounded-lg text-center text-gray-500">
+        <p className="mb-2">&copy; 2024 Q&A Hub. All rights reserved.</p>
+        <div className="space-x-2">
           <Link to="/about" className="text-blue-500 hover:underline">
             About Us
-          </Link>{" "}
-          |{" "}
+          </Link>
+          <span>•</span>
           <Link to="/contact" className="text-blue-500 hover:underline">
             Contact
-          </Link>{" "}
-          |{" "}
+          </Link>
+          <span>•</span>
           <Link to="/privacy" className="text-blue-500 hover:underline">
             Privacy Policy
           </Link>
-        </p>
+        </div>
       </footer>
     </div>
   );

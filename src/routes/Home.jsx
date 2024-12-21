@@ -27,11 +27,9 @@ const Home = () => {
   }, []);
 
   const getImageSrc = (images) => {
-    if (images && images[0] && images[0].startsWith("http")) {
-      return images[0];
-    }
-    if (images && images[0]) {
-      return `http://localhost:5000/${images[0]}`;
+    // For Cloudinary images
+    if (images && images.length > 0) {
+      return images[0]; // Cloudinary URLs are already complete URLs
     }
     return "https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg";
   };
@@ -112,8 +110,9 @@ const Home = () => {
                     {/* Thumbnail */}
                     <img
                       src={getImageSrc(question.images)}
-                      alt="Thumbnail"
+                      alt="Question thumbnail"
                       className="w-12 h-12 sm:w-16 sm:h-16 rounded-full object-cover"
+                      loading="lazy"
                     />
                     <div className="flex-grow space-y-2">
                       {/* Question Title */}
