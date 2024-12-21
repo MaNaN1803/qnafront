@@ -3,31 +3,50 @@ import { apiRequest } from "../utils/api";
 import { Link } from "react-router-dom";
 
 const QuestionList = () => {
+  const categories = [
+    "General",
+    "Waste Management",
+    "Road Maintenance",
+    "Public Safety",
+    "Environmental",
+    "Healthcare",
+    "Education",
+    "Transportation",
+    "Energy",
+    "Sustainability",
+    "Community",
+  ];
+
   const [questions, setQuestions] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchQuestions = async () => {
       try {
-        const data = await apiRequest("/questions");
+        setLoading(true);
+        setError(null);
+        const query = selectedCategory ? `?category=${selectedCategory}` : "";
+        const data = await apiRequest(`/questions${query}`);
         const sortedQuestions = data.sort(
           (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
         );
         setQuestions(sortedQuestions);
-      } catch (error) {
-        console.error("Error fetching questions:", error);
+      } catch (err) {
+        console.error("Error fetching questions:", err);
+        setError("Failed to fetch questions. Please try again later.");
       } finally {
         setLoading(false);
       }
     };
 
     fetchQuestions();
-  }, []);
+  }, [selectedCategory]);
 
   const getImageSrc = (images) => {
-    // For Cloudinary images
     if (images && images.length > 0) {
-      return images[0]; // Cloudinary URLs are already complete URLs
+      return images[0];
     }
     return "https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg";
   };
@@ -39,6 +58,10 @@ const QuestionList = () => {
     } catch (e) {
       return "Invalid date";
     }
+  };
+
+  const handleCategoryClick = (category) => {
+    setSelectedCategory(category === selectedCategory ? null : category);
   };
 
   return (
@@ -61,16 +84,16 @@ const QuestionList = () => {
           <div className="bg-white p-4 shadow rounded-lg mb-6">
             <h2 className="text-lg font-semibold mb-4">Categories</h2>
             <ul className="space-y-2">
-              {["General", "Waste Management", "Road Maintenance", "Public Safety",
-                "Environmental", "Healthcare", "Education", "Transportation",
-                "Energy", "Sustainability", "Community"].map((category) => (
+              {categories.map((category) => (
                 <li key={category}>
-                  <Link
-                    to={`/category/${category.toLowerCase().replace(" ", "-")}`}
-                    className="text-blue-500 hover:underline block py-1"
+                  <button
+                    onClick={() => handleCategoryClick(category)}
+                    className={`text-blue-500 hover:underline block py-1 w-full text-left ${
+                      selectedCategory === category ? "font-bold text-blue-700" : ""
+                    }`}
                   >
                     {category}
-                  </Link>
+                  </button>
                 </li>
               ))}
             </ul>
@@ -79,7 +102,10 @@ const QuestionList = () => {
 
         {/* Question Feed */}
         <div className="lg:w-3/4">
-          <h2 className="text-2xl font-semibold mb-4">All Questions</h2>
+          <h2 className="text-2xl font-semibold mb-4">
+            {selectedCategory ? `${selectedCategory} Questions` : "All Questions"}
+          </h2>
+          {error && <p className="text-red-500 mb-4">{error}</p>}
           {loading ? (
             <p className="text-center text-gray-500">Loading questions...</p>
           ) : questions.length > 0 ? (
