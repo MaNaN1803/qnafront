@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { apiRequest } from "../utils/api";
 
 const Login = () => {
@@ -10,12 +10,18 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError(null);
+    
     try {
       const response = await apiRequest("/auth/login", "POST", { email, password });
-      localStorage.setItem("token", response.token);
-      navigate("/");
-    } catch {
-      setError("Invalid credentials. Please try again.");
+      if (response.token) {
+        localStorage.setItem("token", response.token);
+        navigate("/", { replace: true });
+      } else {
+        setError("Invalid response from server");
+      }
+    } catch (err) {
+      setError(err.message || "Invalid credentials. Please try again.");
     }
   };
 
@@ -24,7 +30,11 @@ const Login = () => {
       <div className="w-full sm:w-96 bg-gradient-to-r from-gray-200 via-gray-200 to-gray-400 p-8 rounded-lg shadow-xl">
         <h2 className="text-4xl font-semibold text-center text-gray-800 mb-8">Login</h2>
         <form onSubmit={handleSubmit}>
-          {error && <p className="text-red-500 text-center mb-4">{error}</p>}
+          {error && (
+            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+              {error}
+            </div>
+          )}
 
           <input
             type="email"
@@ -51,9 +61,9 @@ const Login = () => {
         </form>
         <p className="mt-6 text-center text-gray-600">
           Don't have an account?{" "}
-          <a href="/signup" className="text-gray-800 font-semibold hover:underline">
+          <Link to="/signup" className="text-gray-800 font-semibold hover:underline">
             Sign up
-          </a>
+          </Link>
         </p>
       </div>
     </div>
