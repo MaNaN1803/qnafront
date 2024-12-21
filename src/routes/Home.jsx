@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { apiRequest } from "../utils/api";
 import { Menu } from "lucide-react";
 
@@ -7,11 +7,16 @@ const Home = () => {
   const [questions, setQuestions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const categoryParam = searchParams.get("category");
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchQuestions = async () => {
       try {
-        const data = await apiRequest("/questions");
+        setLoading(true);
+        const query = categoryParam ? `?category=${categoryParam}` : "";
+        const data = await apiRequest(`/questions${query}`);
         const sortedQuestions = data.sort(
           (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
         );
@@ -24,12 +29,11 @@ const Home = () => {
     };
 
     fetchQuestions();
-  }, []);
+  }, [categoryParam]);
 
   const getImageSrc = (images) => {
-    // For Cloudinary images
     if (images && images.length > 0) {
-      return images[0]; // Cloudinary URLs are already complete URLs
+      return images[0];
     }
     return "https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg";
   };
@@ -45,6 +49,11 @@ const Home = () => {
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
+  };
+
+  const handleCategoryClick = (category) => {
+    setSearchParams({ category });
+    // navigate(`/home?category=${category.toLowerCase().replace(" ", "-")}`);
   };
 
   return (
@@ -75,20 +84,31 @@ const Home = () => {
 
         <div className="flex flex-col lg:flex-row gap-6">
           {/* Sidebar */}
-          <div className={`lg:w-1/4 ${isSidebarOpen ? 'block' : 'hidden'} lg:block`}>
+          <div className={`lg:w-1/4 ${isSidebarOpen ? "block" : "hidden"} lg:block`}>
             <div className="bg-white p-4 shadow rounded-lg mb-6 sticky top-4">
               <h2 className="text-lg font-semibold mb-4">Categories</h2>
               <ul className="space-y-2">
-                {["General", "Waste Management", "Road Maintenance", "Public Safety", 
-                  "Environmental", "Healthcare", "Education", "Transportation", 
-                  "Energy", "Sustainability", "Community"].map((category) => (
+                {[
+                  "Waste Management",
+    "Road Maintenance",
+    "Public Safety",
+    "Water Supply",
+    "Sanitation",
+    "Electricity",
+    "Garbage Collection",
+    "Colony Issue",
+    "Public Transport",
+    "Public Health",
+    "Pollution",
+    "Other",
+                ].map((category) => (
                   <li key={category}>
-                    <Link
-                      to={`/category/${category.toLowerCase().replace(" ", "-")}`}
-                      className="text-blue-500 hover:underline block py-1"
+                    <button
+                      onClick={() => handleCategoryClick(category)}
+                      className="text-blue-500 hover:underline block py-1 w-full text-left"
                     >
                       {category}
-                    </Link>
+                    </button>
                   </li>
                 ))}
               </ul>
@@ -97,7 +117,9 @@ const Home = () => {
 
           {/* Question Feed */}
           <div className="lg:w-3/4">
-            <h2 className="text-xl sm:text-2xl font-semibold mb-4">Latest Questions</h2>
+            <h2 className="text-xl sm:text-2xl font-semibold mb-4">
+              {categoryParam ? `${categoryParam} Questions` : "Latest Questions"}
+            </h2>
             {loading ? (
               <p className="text-center text-gray-500">Loading questions...</p>
             ) : questions.length > 0 ? (

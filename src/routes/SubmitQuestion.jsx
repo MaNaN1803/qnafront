@@ -7,6 +7,21 @@ import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 
 const SubmitQuestion = () => {
+  const categories = [
+    "Waste Management",
+    "Road Maintenance",
+    "Public Safety",
+    "Water Supply",
+    "Sanitation",
+    "Electricity",
+    "Garbage Collection",
+    "Colony Issue",
+    "Public Transport",
+    "Public Health",
+    "Pollution",
+    "Other",
+  ];
+
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -122,7 +137,11 @@ const SubmitQuestion = () => {
           <option value="" disabled>
             Select Category
           </option>
-          {/* Add categories */}
+          {categories.map((category) => (
+            <option key={category} value={category}>
+              {category}
+            </option>
+          ))}
         </select>
 
         <textarea
