@@ -17,7 +17,7 @@ const SubmitQuestion = () => {
   const [images, setImages] = useState([]);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState(null);
-  const [selectedPosition, setSelectedPosition] = useState(null);
+  const [selectedPosition, setSelectedPosition] = useState([28.6139, 77.2090]);
   const [mapCenter, setMapCenter] = useState([28.6139, 77.2090]);
   const navigate = useNavigate();
 
@@ -65,6 +65,7 @@ const SubmitQuestion = () => {
       // Create question with Cloudinary URLs
       const questionData = {
         ...formData,
+        gpsLocation: selectedPosition.join(','),
         images: imageUrls,
       };
 
@@ -76,19 +77,6 @@ const SubmitQuestion = () => {
     } finally {
       setUploading(false);
     }
-  };
-
-  const MapClickHandler = () => {
-    useMapEvents({
-      click: (e) => {
-        const { lat, lng } = e.latlng;
-        setSelectedPosition([lat, lng]);
-        setFormData({ ...formData, gpsLocation: `${lat},${lng}` });
-      },
-    });
-    return selectedPosition ? (
-      <Marker position={selectedPosition} icon={customMarkerIcon} />
-    ) : null;
   };
 
   const UpdateMapCenter = () => {
@@ -104,7 +92,6 @@ const SubmitQuestion = () => {
       <h2 className="text-2xl font-bold mb-4 text-center">Submit a Question</h2>
       {error && <p className="text-red-500 mb-4">{error}</p>}
       <form onSubmit={handleSubmit}>
-        {/* Form fields remain the same */}
         <input
           type="text"
           name="title"
@@ -132,19 +119,10 @@ const SubmitQuestion = () => {
           className="w-full p-3 border border-black rounded mb-4"
           required
         >
-          <option value="" disabled>Select Category</option>
-          <option value="Waste Management">Waste Management</option>
-          <option value="Road Maintenance">Road Maintenance</option>
-          <option value="Public Safety">Public Safety</option>
-          <option value="Water Supply">Water Supply</option>
-          <option value="Sanitation">Sanitation</option>
-          <option value="Electricity">Electricity</option>
-          <option value="Garbage Collection">Garbage Collection</option>
-          <option value="Colony issue">Colony issue</option>
-          <option value="Public Transport">Public Transport</option>
-          <option value="Public Health">Public Health</option>
-          <option value="Pollution">Pollution</option>
-          <option value="Other">Other</option>
+          <option value="" disabled>
+            Select Category
+          </option>
+          {/* Add categories */}
         </select>
 
         <textarea
@@ -165,10 +143,21 @@ const SubmitQuestion = () => {
           >
             <TileLayer
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+              attribution="&copy; OpenStreetMap contributors"
             />
             <UpdateMapCenter />
-            <MapClickHandler />
+            <Marker
+              position={selectedPosition}
+              draggable={true}
+              icon={customMarkerIcon}
+              eventHandlers={{
+                dragend: (event) => {
+                  const latlng = event.target.getLatLng();
+                  setSelectedPosition([latlng.lat, latlng.lng]);
+                  setFormData({ ...formData, gpsLocation: `${latlng.lat},${latlng.lng}` });
+                },
+              }}
+            />
           </MapContainer>
           <button
             type="button"
@@ -190,9 +179,7 @@ const SubmitQuestion = () => {
             accept="image/*"
             multiple
           />
-          {uploading && (
-            <p className="text-blue-500 mt-2">Uploading images...</p>
-          )}
+          {uploading && <p className="text-blue-500 mt-2">Uploading images...</p>}
         </div>
 
         <button
