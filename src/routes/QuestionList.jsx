@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 
 const QuestionList = () => {
   const categories = [
-    "General",
     "Waste Management",
     "Road Maintenance",
     "Public Safety",
