@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom'; // Added useNavigate here
+import { useParams, useNavigate } from 'react-router-dom';
 import { apiRequest } from '../utils/api';
 
 const AnswerQuestion = () => {
-  const { id } = useParams(); // Question ID
+  const { id } = useParams();
   const [question, setQuestion] = useState({});
   const [answers, setAnswers] = useState([]);
   const [content, setContent] = useState('');
   const [error, setError] = useState('');
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
-  const navigate = useNavigate(); // Initialize navigate function
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchQuestionAndAnswers = async () => {
@@ -42,7 +42,6 @@ const AnswerQuestion = () => {
     }
   };
 
-  // Function to format date
   const formatDate = (dateField) => {
     if (!dateField) return "Unknown";
     try {
@@ -52,7 +51,6 @@ const AnswerQuestion = () => {
     }
   };
 
-  // Function to get image src
   const getImageSrc = (images) => {
     if (images && images[0] && images[0].startsWith("http")) {
       return images[0];
@@ -63,111 +61,126 @@ const AnswerQuestion = () => {
     return "https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg";
   };
 
-  // Navigate to the user's profile page when the username is clicked
   const navigateToUserProfile = (userId) => {
     navigate(`/profile/${userId}`);
   };
 
   return (
-    <div className="max-w-4xl mx-auto mt-6 p-6 bg-white shadow-lg rounded-lg">
-      {error && <p className="text-red-500 text-center">{error}</p>}
+    <div className="max-w-5xl mx-auto mt-6 p-6 bg-gray-100 shadow-xl rounded-lg text-gray-900">
+      {error && <p className="text-red-500 text-center font-medium">{error}</p>}
 
-      {/* Question Details Section */}
-      <div className="bg-gray-50 p-4 rounded-lg shadow-sm border border-gray-200">
-        <h3 className="text-5xl text-center font-bold text-gray-800 mb-4">Question Details</h3>
+      {/* Question Card */}
+      <div className="relative bg-white p-8 rounded-xl shadow-lg border border-gray-300">
+        {/* Status */}
+        <span
+          className={`absolute top-4 right-4 px-4 py-2 rounded-full text-sm font-semibold shadow-md ${
+            question.status === "resolved"
+              ? "bg-green-100 text-green-800"
+              : question.status === "under review"
+              ? "bg-yellow-100 text-yellow-800"
+              : "bg-red-100 text-red-800"
+          }`}
+        >
+          {question.status}
+        </span>
 
-        {/* Title with Label */}
-        <div className="space-y-2">
-          <label className="block text-gray-600 font-medium">Title:</label>
-          <h1 className="text-3xl font-bold text-gray-800 text-left">{question.title}</h1>
-        </div>
+        {/* Title */}
+        <h1 className="text-4xl font-extrabold text-center mb-6 text-gray-800">{question.title}</h1>
 
-        {/* Description with Label and Expand Option */}
-        <div className="space-y-2 mt-4">
-          <label className="block text-gray-600 font-medium">Description:</label>
+        {/* Description */}
+        <div className="space-y-4">
           <p
-            className={`text-lg text-gray-700 ${isDescriptionExpanded ? '' : 'line-clamp-3'}`}
+            className={`text-lg leading-relaxed ${isDescriptionExpanded ? '' : 'line-clamp-3'}`}
           >
+            <strong className="block text-gray-600 mb-2">Description:</strong>
             {question.description}
           </p>
           {!isDescriptionExpanded && question.description?.length > 200 && (
             <button
               onClick={() => setIsDescriptionExpanded(true)}
-              className="text-blue-600 text-sm mt-2 hover:underline hover:bg-white"
+              className="text-blue-600 text-sm hover:underline focus:outline-none"
             >
-              Click to view full description
+              View Full Description
             </button>
           )}
         </div>
 
-        {/* Other Question Details */}
-        <div className="space-y-2 mt-4">
-          <div>
+        {/* Other Details */}
+        <div className="mt-6 grid grid-cols-2 gap-4 text-sm">
+          <p>
             <strong className="text-gray-600">Category:</strong> {question.category || "General"}
-          </div>
-          <div>
-            <strong className="text-gray-600">Status:</strong>
-            <span
-              className={`${
-                question.status === "resolved"
-                  ? "text-green-600"
-                  : question.status === "under review"
-                  ? "text-yellow-500"
-                  : "text-red-600"
-              }`}
+          </p>
+          <p>
+            <strong className="text-gray-600">Location:</strong>{' '}
+            <a
+              href={`https://www.google.com/maps?q=${question.gpsLocation}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-600 hover:underline"
             >
-              {question.status}
-            </span>
-          </div>
-          <div>
-            <strong className="text-gray-600">Location:</strong> {question.gpsLocation || "Not provided"}
-          </div>
-          <div>
+              View on Google Maps
+            </a>
+          </p>
+          <p>
             <strong className="text-gray-600">Created At:</strong> {formatDate(question.createdAt)}
-          </div>
-          <div>
-            <strong className="text-gray-600">Image:</strong>
-            <img src={getImageSrc(question.images)} alt={question.title} className="w-40 mt-2" />
-          </div>
-          {/* Displaying Attempts */}
-          <div>
+          </p>
+          <p>
             <strong className="text-gray-600">Attempts:</strong> {question.attempts || "No attempts yet"}
-          </div>
+          </p>
+        </div>
+        <div className="flex justify-center mt-6">
+          <img
+            src={getImageSrc(question.images)}
+            alt={question.title}
+            className="w-64 h-40 object-cover rounded-lg border border-gray-300 shadow-md"
+          />
         </div>
       </div>
 
-      {/* Answer Form Section */}
-      <form onSubmit={handleSubmit} className="mt-6">
-        <label htmlFor="answerContent" className="block text-lg font-medium text-gray-700 mb-2">Your Answer</label>
+      {/* Answer Form */}
+      <form onSubmit={handleSubmit} className="mt-8 bg-white p-6 rounded-lg shadow-lg border border-gray-300">
+        <label htmlFor="answerContent" className="block text-lg font-semibold mb-2 text-gray-800">
+          Your Answer
+        </label>
         <textarea
           id="answerContent"
           value={content}
           onChange={(e) => setContent(e.target.value)}
           rows="4"
           placeholder="Write your answer here..."
-          className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+          className="w-full p-4 border border-gray-300 rounded-lg bg-gray-50 focus:ring-2 focus:ring-blue-400 focus:outline-none text-sm text-gray-800"
           required
         />
         <button
           type="submit"
-          className="mt-4 px-6 py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 focus:outline-none"
+          className="mt-4 w-full px-6 py-2 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-500 focus:outline-none transition duration-200"
         >
           Submit Answer
         </button>
       </form>
 
-      {/* Displaying Answers */}
-      <h2 className="mt-6 text-xl font-semibold text-gray-800">Answers</h2>
+      {/* Answers Section */}
+      <h2 className="mt-8 text-2xl font-bold text-gray-800">Answers</h2>
       {answers.length > 0 ? (
         answers.map((answer) => (
-          <div key={answer._id} className="p-4 border-b mt-4 bg-gray-50 rounded-lg">
-            <p className="text-gray-700">{answer.content}</p>
-            <p
-              className="text-sm text-gray-500 mt-2 cursor-pointer"
-              onClick={() => navigateToUserProfile(answer.user?._id)}
-            >
-              By: {answer.user?.name}
-            </p>
+          <div
+            key={answer._id}
+            className="flex items-start p-4 mt-4 bg-white rounded-lg shadow-md border border-gray-300"
+          >
+            <img
+              src={answer.user?.profileImage || 'https://via.placeholder.com/50'}
+              alt={answer.user?.name}
+              className="w-12 h-12 rounded-full mr-4 border-2 border-gray-300"
+            />
+            <div>
+              <p className="text-gray-800 text-sm">{answer.content}</p>
+              <p
+                className="text-xs text-blue-600 mt-2 cursor-pointer hover:underline"
+                onClick={() => navigateToUserProfile(answer.user?._id)}
+              >
+                By: {answer.user?.name || 'Anonymous'}
+              </p>
+            </div>
           </div>
         ))
       ) : (
