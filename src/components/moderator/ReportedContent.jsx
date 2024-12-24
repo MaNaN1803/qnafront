@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { apiRequest } from '../../utils/api';
-import { Flag, CheckCircle, XCircle, AlertTriangle } from 'lucide-react';
+import ModeratorReportActions from './ModeratorReportActions';
+import { Flag } from 'lucide-react';
 
 const ReportedContent = () => {
   const [reports, setReports] = useState([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(true);
-  const [selectedReport, setSelectedReport] = useState(null);
-  const [moderationNote, setModerationNote] = useState('');
 
   useEffect(() => {
     fetchReports();
@@ -37,12 +36,10 @@ const ReportedContent = () => {
       await apiRequest(
         `/moderator/reports/${reportId}/moderate`,
         'PUT',
-        { action, moderationNote },
+        { action },
         token
       );
       fetchReports();
-      setSelectedReport(null);
-      setModerationNote('');
     } catch (error) {
       console.error('Error handling report:', error);
     }
@@ -74,6 +71,7 @@ const ReportedContent = () => {
                   </span>
                 </div>
                 <p className="text-gray-600 mt-2">{report.reason}</p>
+                <p className="text-sm text-gray-500 mt-1">{report.details}</p>
                 <div className="mt-2 p-2 bg-gray-50 rounded">
                   <p className="text-sm">
                     {report.contentType === 'question'
@@ -82,26 +80,7 @@ const ReportedContent = () => {
                   </p>
                 </div>
               </div>
-              <div className="flex space-x-2">
-                <button
-                  onClick={() => handleReportAction(report._id, 'approve')}
-                  className="p-2 text-green-600 hover:bg-green-50 rounded"
-                >
-                  <CheckCircle size={20} />
-                </button>
-                <button
-                  onClick={() => handleReportAction(report._id, 'reject')}
-                  className="p-2 text-red-600 hover:bg-red-50 rounded"
-                >
-                  <XCircle size={20} />
-                </button>
-                <button
-                  onClick={() => setSelectedReport(report)}
-                  className="p-2 text-yellow-600 hover:bg-yellow-50 rounded"
-                >
-                  <AlertTriangle size={20} />
-                </button>
-              </div>
+              <ModeratorReportActions onAction={handleReportAction} report={report} />
             </div>
           </div>
         ))}
@@ -127,45 +106,6 @@ const ReportedContent = () => {
           Next
         </button>
       </div>
-
-      {/* Moderation Modal */}
-      {selectedReport && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-          <div className="bg-white rounded-lg p-6 max-w-lg w-full">
-            <h3 className="text-lg font-semibold mb-4">Add Moderation Note</h3>
-            <textarea
-              value={moderationNote}
-              onChange={(e) => setModerationNote(e.target.value)}
-              className="w-full p-2 border rounded-md mb-4"
-              rows="4"
-              placeholder="Enter moderation note..."
-            />
-            <div className="flex justify-end space-x-2">
-              <button
-                onClick={() => {
-                  setSelectedReport(null);
-                  setModerationNote('');
-                }}
-                className="px-4 py-2 border rounded-md"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={() => handleReportAction(selectedReport._id, 'warning')}
-                className="px-4 py-2 bg-yellow-600 text-white rounded-md"
-              >
-                Issue Warning
-              </button>
-              <button
-                onClick={() => handleReportAction(selectedReport._id, 'remove')}
-                className="px-4 py-2 bg-red-600 text-white rounded-md"
-              >
-                Remove Content
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

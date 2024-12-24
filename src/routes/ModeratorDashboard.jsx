@@ -1,5 +1,6 @@
 import React from 'react';
 import QuestionModeration from '../components/moderator/QuestionModeration';
+import QuestionList from '../components/moderator/QuestionList';
 import ReportedContent from '../components/moderator/ReportedContent';
 import ModeratorStats from '../components/moderator/ModeratorStats';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/Tabs';
@@ -24,12 +25,20 @@ const ModeratorDashboard = () => {
             <Flag size={20} />
             <span>Reports</span>
           </TabsTrigger>
+          <TabsTrigger value="question" className="flex items-center space-x-2">
+            <Flag size={20} />
+            <span>QuestionList</span>
+          </TabsTrigger>
+
+         
           <TabsTrigger value="flagged" className="flex items-center space-x-2">
             <AlertTriangle size={20} />
             <span>Flagged Content</span>
           </TabsTrigger>
         </TabsList>
-
+        <TabsContent value="question">
+  <QuestionList />
+</TabsContent>
         <TabsContent value="overview">
           <ModeratorStats />
         </TabsContent>
