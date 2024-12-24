@@ -89,7 +89,7 @@ const AnswerQuestion = () => {
         <h1 className="text-4xl font-extrabold text-center mb-6 text-gray-800">{question.title}</h1>
         <div className="flex justify-between items-start mb-4">
   <h1 className="text-2xl font-bold">{question.title}</h1>
-  <QuestionActions question={question} userRole={user.role} />
+  {/* <QuestionActions question={question} userRole={user.role} /> */}
 </div>
         {/* Description */}
         <div className="space-y-4">
