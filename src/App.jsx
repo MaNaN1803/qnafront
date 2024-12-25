@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate, useLocation } from 'react-router-dom';
 import PrivateRoute from './routes/PrivateRoute';
 import Home from './routes/Home';
@@ -18,10 +18,24 @@ const AppContent = () => {
   const location = useLocation();
   const isAuthPage = ['/login', '/signup'].includes(location.pathname);
   const isAuthenticated = !!localStorage.getItem('token');
+  
+  const [darkMode, setDarkMode] = useState(() => {
+    const savedMode = localStorage.getItem('darkMode');
+    return savedMode ? JSON.parse(savedMode) : false;
+  });
+
+  useEffect(() => {
+    if (darkMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+    localStorage.setItem('darkMode', JSON.stringify(darkMode));
+  }, [darkMode]);
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      {!isAuthPage && <Navbar />}
+    <div className={`min-h-screen transition-colors duration-300 ${darkMode ? 'dark:bg-gray-900 dark:text-white' : 'bg-gray-100 text-black'}`}>
+      {!isAuthPage && <Navbar darkMode={darkMode} setDarkMode={setDarkMode} />}
       <div className="container mx-auto py-6 px-4">
         <Routes>
           <Route 
