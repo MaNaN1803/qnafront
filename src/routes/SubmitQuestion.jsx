@@ -2,9 +2,17 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { apiRequest } from '../utils/api';
 import { uploadToCloudinary } from '../utils/cloudinary';
-import { MapContainer, TileLayer, Marker, useMapEvents, useMap } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
+import { FilePond, registerPlugin } from 'react-filepond';
+import 'filepond/dist/filepond.min.css';
+import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css';
+import FilePondPluginImagePreview from 'filepond-plugin-image-preview';
+import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type';
+
+// Register FilePond plugins
+registerPlugin(FilePondPluginImagePreview, FilePondPluginFileValidateType);
 
 const SubmitQuestion = () => {
   const categories = [
@@ -29,7 +37,7 @@ const SubmitQuestion = () => {
     gpsLocation: '',
     attempts: '',
   });
-  const [images, setImages] = useState([]);
+  const [filePondFiles, setFilePondFiles] = useState([]);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState(null);
   const [selectedPosition, setSelectedPosition] = useState([28.6139, 77.2090]);
@@ -45,10 +53,6 @@ const SubmitQuestion = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleImageChange = (e) => {
-    setImages(Array.from(e.target.files));
-  };
-
   const handleNearMe = () => {
     navigator.geolocation.getCurrentPosition(
       (position) => {
@@ -57,7 +61,7 @@ const SubmitQuestion = () => {
         setMapCenter([latitude, longitude]);
         setFormData({ ...formData, gpsLocation: `${latitude},${longitude}` });
       },
-      (err) => {
+      () => {
         setError('Failed to fetch location. Please allow location access.');
       }
     );
@@ -71,8 +75,8 @@ const SubmitQuestion = () => {
     try {
       // Upload images to Cloudinary
       const imageUrls = await Promise.all(
-        images.map(async (image) => {
-          const imageUrl = await uploadToCloudinary(image);
+        filePondFiles.map(async (file) => {
+          const imageUrl = await uploadToCloudinary(file.file);
           return imageUrl;
         })
       );
@@ -154,7 +158,7 @@ const SubmitQuestion = () => {
         ></textarea>
 
         <div className="mb-4">
-          <h3 className="text-lg font-bold mb-2">Select Location</h3>
+          <h3 className="text-lg font-bold mb-2">Select Location where the issue has occurred :</h3>
           <MapContainer
             center={mapCenter}
             zoom={13}
@@ -188,15 +192,13 @@ const SubmitQuestion = () => {
         </div>
 
         <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Upload Images
-          </label>
-          <input
-            type="file"
-            onChange={handleImageChange}
-            className="w-full"
-            accept="image/*"
-            multiple
+          <h3 className="text-lg font-bold mb-2">Upload Images for the reference :</h3>
+          <FilePond
+            files={filePondFiles}
+            onupdatefiles={setFilePondFiles}
+            allowMultiple={true}
+            acceptedFileTypes={['image/*']}
+            labelIdle='Drag & Drop your images or <span class="filepond--label-action">Browse</span>'
           />
           {uploading && <p className="text-blue-500 mt-2">Uploading images...</p>}
         </div>
