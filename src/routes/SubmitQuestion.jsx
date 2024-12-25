@@ -107,7 +107,7 @@ const SubmitQuestion = () => {
   };
 
   return (
-    <div className="max-w-lg mx-auto mt-20 bg-white p-6 rounded shadow">
+    <div className="max-w-lg mx-auto mt-20 bg-white dark:bg-gray-800 p-6 rounded shadow dark:border-gray-700 dark:text-white">
       <h2 className="text-2xl font-bold mb-4 text-center">Submit a Question</h2>
       {error && <p className="text-red-500 mb-4">{error}</p>}
       <form onSubmit={handleSubmit}>
@@ -117,7 +117,7 @@ const SubmitQuestion = () => {
           placeholder="Question Title"
           value={formData.title}
           onChange={handleChange}
-          className="w-full p-3 border border-black rounded mb-4"
+          className="w-full p-3 border border-black dark:border-gray-600 rounded mb-4 dark:bg-gray-700 dark:text-white"
           required
         />
 
@@ -126,7 +126,7 @@ const SubmitQuestion = () => {
           placeholder="Description"
           value={formData.description}
           onChange={handleChange}
-          className="w-full p-3 border border-black rounded mb-4"
+          className="w-full p-3 border border-black dark:border-gray-600 rounded mb-4 dark:bg-gray-700 dark:text-white"
           rows="4"
           required
         ></textarea>
@@ -135,7 +135,7 @@ const SubmitQuestion = () => {
           name="category"
           value={formData.category}
           onChange={handleChange}
-          className="w-full p-3 border border-black rounded mb-4"
+          className="w-full p-3 border border-black dark:border-gray-600 rounded mb-4 dark:bg-gray-700 dark:text-white"
           required
         >
           <option value="" disabled>
@@ -153,7 +153,7 @@ const SubmitQuestion = () => {
           placeholder="Previous attempts to resolve the issue"
           value={formData.attempts}
           onChange={handleChange}
-          className="w-full p-3 border border-black rounded mb-4"
+          className="w-full p-3 border border-black dark:border-gray-600 rounded mb-4 dark:bg-gray-700 dark:text-white"
           rows="3"
         ></textarea>
 
@@ -165,8 +165,8 @@ const SubmitQuestion = () => {
             style={{ height: '300px', width: '100%' }}
           >
             <TileLayer
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-              attribution="&copy; OpenStreetMap contributors"
+              url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+              attribution="&copy; Esri &mdash; Esri, DeLorme, NAVTEQ"
             />
             <UpdateMapCenter />
             <Marker
@@ -206,9 +206,7 @@ const SubmitQuestion = () => {
         <button
           type="submit"
           disabled={uploading}
-          className={`w-full bg-black text-white py-3 rounded transition ${
-            uploading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-800'
-          }`}
+          className={`w-full bg-black text-white py-3 rounded transition ${uploading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-800 dark:hover:bg-gray-600'}`}
         >
           {uploading ? 'Submitting...' : 'Submit'}
         </button>
