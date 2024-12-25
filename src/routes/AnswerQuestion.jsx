@@ -11,6 +11,7 @@ const AnswerQuestion = () => {
   const [error, setError] = useState('');
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
   const navigate = useNavigate();
+  const [user, setUser ] = useState(null);
 
   useEffect(() => {
     const fetchQuestionAndAnswers = async () => {
@@ -19,6 +20,10 @@ const AnswerQuestion = () => {
         const answerData = await apiRequest(`/answers/${id}`, 'GET');
         setQuestion(questionData);
         setAnswers(answerData);
+        const token = localStorage.getItem('token');
+        if (token) {
+          const userData = await apiRequest('/auth/profile', 'GET', null, token);
+          setUser (userData); }
       } catch (err) {
         setError('Error fetching data');
       }
@@ -89,7 +94,7 @@ const AnswerQuestion = () => {
         <h1 className="text-4xl font-extrabold text-left mb-6 text-gray-800">{question.title}</h1>
         <div className="flex justify-between items-start mb-4">
   
-  {/* <QuestionActions question={question} userRole={user.role} /> */}
+        <QuestionActions question={question} userRole={user?.role} />
 </div>
         {/* Description */}
         <div className="space-y-4">
