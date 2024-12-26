@@ -13,6 +13,7 @@ import AnswerQuestion from './routes/AnswerQuestion';
 import UnansweredQuestions from './routes/UnansweredQuestions';
 import AdminDashboard from './routes/AdminDashboard';
 import ModeratorDashboard from './routes/ModeratorDashboard';
+import NotFound from './routes/NotFound';
 
 const AppContent = () => {
   const location = useLocation();
@@ -38,6 +39,8 @@ const AppContent = () => {
       {!isAuthPage && <Navbar darkMode={darkMode} setDarkMode={setDarkMode} />}
       <div className="container mx-auto py-6 px-4">
         <Routes>
+        <Route path="*" element={<NotFound />} />
+
           <Route 
             path="/login" 
             element={
