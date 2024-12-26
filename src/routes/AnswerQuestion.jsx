@@ -95,11 +95,11 @@ const AnswerQuestion = () => {
   const getStatusColor = (status) => {
     switch (status?.toLowerCase()) {
       case 'resolved':
-        return 'bg-emerald-100 text-emerald-700 border-emerald-200';
+        return 'bg-emerald-100 dark:bg-emerald-900 text-emerald-700 dark:text-emerald-200 border-emerald-200 dark:border-emerald-800';
       case 'under review':
-        return 'bg-amber-100 text-amber-700 border-amber-200';
+        return 'bg-amber-100 dark:bg-amber-900 text-amber-700 dark:text-amber-200 border-amber-200 dark:border-amber-800';
       default:
-        return 'bg-red-100 text-red-700 border-red-200';
+        return 'bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-200 border-red-200 dark:border-red-800';
     }
   };
 
@@ -130,24 +130,24 @@ const AnswerQuestion = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
         {error && (
-          <div className="mb-6 p-4 bg-red-50 border-l-4 border-red-500 text-red-700 flex items-center">
+          <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/50 border-l-4 border-red-500 text-red-700 dark:text-red-200 flex items-center">
             <AlertCircle className="w-5 h-5 mr-2" />
             {error}
           </div>
         )}
 
         {/* Question Header */}
-        <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden transform transition-all hover:shadow-xl">
+        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 overflow-hidden transform transition-all hover:shadow-xl">
           <div className="p-6 sm:p-8">
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center space-x-4">
                 <span className={`px-4 py-1.5 rounded-full text-sm font-medium ${getStatusColor(question.status)} border shadow-sm`}>
                   {question.status?.toUpperCase()}
                 </span>
-                <span className="flex items-center text-gray-500 text-sm">
+                <span className="flex items-center text-gray-500 dark:text-gray-400 text-sm">
                   <Eye className="w-4 h-4 mr-1" />
                   {question.views || 0} views
                 </span>
@@ -156,14 +156,14 @@ const AnswerQuestion = () => {
                 <button
                   onClick={() => setIsBookmarked(!isBookmarked)}
                   className={`p-2 rounded-full transition-colors ${
-                    isBookmarked ? 'text-blue-600 bg-blue-50' : 'text-gray-400 hover:text-blue-600'
+                    isBookmarked ? 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/50' : 'text-gray-400 dark:text-gray-500 hover:text-blue-600 dark:hover:text-blue-400'
                   }`}
                 >
                   <Bookmark className="w-5 h-5" />
                 </button>
                 <button
                   onClick={handleShare}
-                  className="p-2 rounded-full text-gray-400 hover:text-blue-600 transition-colors"
+                  className="p-2 rounded-full text-gray-400 dark:text-gray-500 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
                 >
                   <Share2 className="w-5 h-5" />
                 </button>
@@ -172,23 +172,23 @@ const AnswerQuestion = () => {
             </div>
 
             <div className="flex items-center justify-between mb-6">
-              <h1 className="text-3xl font-bold text-gray-900">
+              <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
                 {question.title}
               </h1>
               <div className="flex items-center space-x-4">
                 <img
                   src={question.user?.profileImage || "https://t4.ftcdn.net/jpg/06/84/44/27/360_F_684442786_I7KBvpQdJWSNpol3j0pUVeEiOcB8nDss.jpg"}
                   alt={question.user?.name}
-                  className="w-10 h-10 rounded-full border-2 border-gray-200"
+                  className="w-10 h-10 rounded-full border-2 border-gray-200 dark:border-gray-600"
                 />
                 <div>
                   <button
                     onClick={() => navigateToUserProfile(question.user?._id)}
-                    className="text-sm font-medium text-gray-900 hover:text-blue-600"
+                    className="text-sm font-medium text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400"
                   >
                     {question.user?.name || "Anonymous"}
                   </button>
-                  <p className="text-xs text-gray-500">
+                  <p className="text-xs text-gray-500 dark:text-gray-400">
                     Posted {formatDate(question.createdAt)}
                   </p>
                 </div>
@@ -197,14 +197,14 @@ const AnswerQuestion = () => {
 
             <div className="space-y-6">
               {/* Description */}
-              <div className="prose max-w-none">
-                <div className={`text-gray-600 ${!isDescriptionExpanded && 'line-clamp-3'}`}>
+              <div className="prose dark:prose-invert max-w-none">
+                <div className={`text-gray-600 dark:text-gray-300 ${!isDescriptionExpanded && 'line-clamp-3'}`}>
                   {question.description}
                 </div>
                 {question.description?.length > 200 && (
                   <button
                     onClick={() => setIsDescriptionExpanded(!isDescriptionExpanded)}
-                    className="flex items-center text-blue-600 hover:text-blue-700 mt-2 text-sm font-medium"
+                    className="flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 mt-2 text-sm font-medium"
                   >
                     {isDescriptionExpanded ? (
                       <>Show less <ChevronUp className="ml-1 w-4 h-4" /></>
@@ -217,7 +217,7 @@ const AnswerQuestion = () => {
 
               {/* Image Carousel */}
               {question.images?.length > 0 && (
-                <div className="rounded-xl overflow-hidden border border-gray-200 shadow-md">
+                <div className="rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700 shadow-md">
                   <Carousel
                     showThumbs={false}
                     dynamicHeight={true}
@@ -242,28 +242,28 @@ const AnswerQuestion = () => {
               )}
 
               {/* Question Details */}
-              <div className="grid grid-cols-2 gap-4 pt-4 border-t border-gray-100">
-                <div className="flex items-center text-gray-600 bg-gray-50 p-3 rounded-lg">
-                  <MessageCircle className="w-5 h-5 mr-2 text-blue-500" />
+              <div className="grid grid-cols-2 gap-4 pt-4 border-t border-gray-100 dark:border-gray-700">
+                <div className="flex items-center text-gray-600 dark:text-gray-300 bg-gray-50 dark:bg-gray-700/50 p-3 rounded-lg">
+                  <MessageCircle className="w-5 h-5 mr-2 text-blue-500 dark:text-blue-400" />
                   <span className="text-sm">Category: {question.category || "General"}</span>
                 </div>
-                <div className="flex items-center text-gray-600 bg-gray-50 p-3 rounded-lg">
-                  <MapPin className="w-5 h-5 mr-2 text-red-500" />
+                <div className="flex items-center text-gray-600 dark:text-gray-300 bg-gray-50 dark:bg-gray-700/50 p-3 rounded-lg">
+                  <MapPin className="w-5 h-5 mr-2 text-red-500 dark:text-red-400" />
                   <a
                     href={`https://www.google.com/maps?q=${question.gpsLocation}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-sm text-blue-600 hover:text-blue-700"
+                    className="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300"
                   >
                     View Location
                   </a>
                 </div>
-                <div className="flex items-center text-gray-600 bg-gray-50 p-3 rounded-lg">
-                  <Calendar className="w-5 h-5 mr-2 text-green-500" />
+                <div className="flex items-center text-gray-600 dark:text-gray-300 bg-gray-50 dark:bg-gray-700/50 p-3 rounded-lg">
+                  <Calendar className="w-5 h-5 mr-2 text-green-500 dark:text-green-400" />
                   <span className="text-sm">{formatDate(question.createdAt)}</span>
                 </div>
-                <div className="flex items-center text-gray-600 bg-gray-50 p-3 rounded-lg">
-                  <Activity className="w-5 h-5 mr-2 text-purple-500" />
+                <div className="flex items-center text-gray-600 dark:text-gray-300 bg-gray-50 dark:bg-gray-700/50 p-3 rounded-lg">
+                  <Activity className="w-5 h-5 mr-2 text-purple-500 dark:text-purple-400" />
                   <span className="text-sm">
                     {question.attempts || "No"} attempts
                   </span>
@@ -274,9 +274,9 @@ const AnswerQuestion = () => {
         </div>
 
         {/* Answer Form */}
-        <div className="mt-8 bg-white rounded-2xl shadow-lg border border-gray-100 p-6">
-          <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
-            <MessageCircle className="w-5 h-5 mr-2 text-blue-500" />
+        <div className="mt-8 bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 p-6">
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+            <MessageCircle className="w-5 h-5 mr-2 text-blue-500 dark:text-blue-400" />
             Your Answer
           </h2>
           <form onSubmit={handleSubmit}>
@@ -284,14 +284,14 @@ const AnswerQuestion = () => {
               value={content}
               onChange={(e) => setContent(e.target.value)}
               rows="4"
-              className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+              className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent resize-none"
               placeholder="Share your knowledge..."
               required
             />
             <div className="mt-4 flex justify-end">
               <button
                 type="submit"
-                className="px-6 py-3 bg-blue-600 text-white font-medium rounded-xl hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors flex items-center"
+                className="px-6 py-3 bg-blue-600 dark:bg-blue-500 text-white font-medium rounded-xl hover:bg-blue-700 dark:hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition-colors flex items-center"
               >
                 <MessageCircle className="w-4 h-4 mr-2" />
                 Post Answer
@@ -302,8 +302,8 @@ const AnswerQuestion = () => {
 
         {/* Answers Section */}
         <div className="mt-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
-            <Award className="w-6 h-6 mr-2 text-yellow-500" />
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
+            <Award className="w-6 h-6 mr-2 text-yellow-500 dark:text-yellow-400" />
             {answers.length} {answers.length === 1 ? 'Answer' : 'Answers'}
           </h2>
           
@@ -312,34 +312,34 @@ const AnswerQuestion = () => {
               answers.map((answer) => (
                 <div
                   key={answer._id}
-                  className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 hover:shadow-xl transition-shadow"
+                  className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 p-6 hover:shadow-xl transition-shadow"
                 >
                   <div className="flex items-start space-x-4">
                     <img
                       src={answer.user?.profileImage || "https://t4.ftcdn.net/jpg/06/84/44/27/360_F_684442786_I7KBvpQdJWSNpol3j0pUVeEiOcB8nDss.jpg"}
                       alt={answer.user?.name}
-                      className="w-10 h-10 rounded-full object-cover border-2 border-gray-200"
+                      className="w-10 h-10 rounded-full object-cover border-2 border-gray-200 dark:border-gray-600"
                     />
                     <div className="flex-1">
                       <div className="flex items-center justify-between">
                         <button
                           onClick={() => navigateToUserProfile(answer.user?._id)}
-                          className="text-sm font-medium text-gray-900 hover:text-blue-600"
+                          className="text-sm font-medium text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400"
                         >
                           {answer.user?.name || "Anonymous"}
                         </button>
-                        <span className="text-xs text-gray-500">
+                        <span className="text-xs text-gray-500 dark:text-gray-400">
                           {formatDate(answer.createdAt)}
                         </span>
                       </div>
-                      <p className="mt-2 text-gray-600">{answer.content}</p>
+                      <p className="mt-2 text-gray-600 dark:text-gray-300">{answer.content}</p>
                       <div className="mt-4 flex items-center space-x-4">
                         <button 
                           onClick={() => toggleHelpful(answer._id)}
                           className={`flex items-center px-3 py-1 rounded-full transition-colors ${
                             helpfulAnswers.has(answer._id)
-                              ? 'bg-blue-50 text-blue-600'
-                              : 'text-gray-500 hover:text-blue-600'
+                              ? 'bg-blue-50 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400'
+                              : 'text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400'
                           }`}
                         >
                           <ThumbsUp className="w-4 h-4 mr-1" />
@@ -353,9 +353,9 @@ const AnswerQuestion = () => {
                 </div>
               ))
             ) : (
-              <div className="text-center py-12 bg-white rounded-2xl border border-gray-100 shadow-lg">
-                <MessageCircle className="w-12 h-12 mx-auto text-gray-400" />
-                <p className="mt-4 text-gray-600">No answers yet. Be the first to share your knowledge!</p>
+              <div className="text-center py-12 bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-lg">
+                <MessageCircle className="w-12 h-12 mx-auto text-gray-400 dark:text-gray-500" />
+                <p className="mt-4 text-gray-600 dark:text-gray-300">No answers yet. Be the first to share your knowledge!</p>
               </div>
             )}
           </div>
