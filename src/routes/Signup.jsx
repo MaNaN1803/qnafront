@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { apiRequest } from "../utils/api";
-
 const Signup = () => {
   const [formData, setFormData] = useState({
     name: "",
@@ -14,7 +13,7 @@ const Signup = () => {
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
-    setError(null); // Clear error when user types
+    setError(null);
   };
 
   const handleSubmit = async (e) => {
@@ -37,8 +36,8 @@ const Signup = () => {
         email: formData.email,
         password: formData.password,
       });
-      navigate("/login", { 
-        state: { message: "Account created successfully! Please login." }
+      navigate("/login", {
+        state: { message: "Account created successfully! Please login." },
       });
     } catch (err) {
       setError(err.message || "Signup failed. Please try again.");
@@ -46,9 +45,9 @@ const Signup = () => {
   };
 
   return (
-    <div className="flex w-full justify-center items-center min-h-screen bg-white border-black overflow-hidden">
-      <div className="w-full sm:w-96 bg-gray-100 p-8 rounded-lg shadow-2xl border-black">
-        <h2 className="text-4xl font-semibold text-center text-gray-800 mb-8">Sign Up</h2>
+    <div className="flex w-full justify-center items-center min-h-screen bg-gray-100 dark:bg-gray-900 transition-colors duration-300">
+      <div className="w-full sm:w-96 bg-white dark:bg-gray-800 p-8 rounded-lg shadow-xl">
+        <h2 className="text-4xl font-semibold text-center text-gray-800 dark:text-gray-200 mb-8">Sign Up</h2>
         <form onSubmit={handleSubmit}>
           {error && (
             <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
@@ -62,7 +61,7 @@ const Signup = () => {
             placeholder="Full Name"
             value={formData.name}
             onChange={handleChange}
-            className="w-full p-4 mb-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-500 transition-all duration-300"
+            className="w-full p-4 mb-4 border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-200 rounded-lg focus:ring-2 focus:ring-gray-500 transition-all duration-300"
             required
           />
           <input
@@ -71,7 +70,7 @@ const Signup = () => {
             placeholder="Email"
             value={formData.email}
             onChange={handleChange}
-            className="w-full p-4 mb-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-500 transition-all duration-300"
+            className="w-full p-4 mb-4 border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-200 rounded-lg focus:ring-2 focus:ring-gray-500 transition-all duration-300"
             required
           />
           <input
@@ -80,7 +79,7 @@ const Signup = () => {
             placeholder="Password"
             value={formData.password}
             onChange={handleChange}
-            className="w-full p-4 mb-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-500 transition-all duration-300"
+            className="w-full p-4 mb-4 border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-200 rounded-lg focus:ring-2 focus:ring-gray-500 transition-all duration-300"
             required
             minLength={6}
           />
@@ -90,19 +89,19 @@ const Signup = () => {
             placeholder="Confirm Password"
             value={formData.confirmPassword}
             onChange={handleChange}
-            className="w-full p-4 mb-6 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-500 transition-all duration-300"
+            className="w-full p-4 mb-6 border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-200 rounded-lg focus:ring-2 focus:ring-gray-500 transition-all duration-300"
             required
           />
           <button
             type="submit"
-            className="w-full py-3 bg-gray-800 text-white rounded-lg hover:bg-gray-700 transition-all duration-300"
+            className="w-full py-3 bg-gray-800 dark:bg-gray-600 text-white rounded-lg hover:bg-gray-700 dark:hover:bg-gray-500 transition-all duration-300"
           >
             Sign Up
           </button>
         </form>
-        <p className="mt-6 text-center text-gray-600">
+        <p className="mt-6 text-center text-gray-600 dark:text-gray-400">
           Already have an account?{" "}
-          <Link to="/login" className="text-gray-800 font-semibold hover:underline">
+          <Link to="/login" className="text-gray-800 dark:text-gray-300 font-semibold hover:underline">
             Login
           </Link>
         </p>
