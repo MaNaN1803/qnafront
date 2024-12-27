@@ -156,6 +156,10 @@ const Home = () => {
                         </span>
                         <span className="hidden sm:inline">•</span>
                         <span>
+                          <strong>Views:</strong> {question.views || 0}
+                        </span>
+                        <span className="hidden sm:inline">•</span>
+                        <span>
                           <strong>Posted by:</strong> {question.user?.name || "Anonymous"}
                         </span>
                       </div>
