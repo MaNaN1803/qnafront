@@ -14,6 +14,7 @@ import UnansweredQuestions from './routes/UnansweredQuestions';
 import AdminDashboard from './routes/AdminDashboard';
 import ModeratorDashboard from './routes/ModeratorDashboard';
 import NotFound from './routes/NotFound';
+import Preloader from './components/Preloader';
 
 const AppContent = () => {
   const location = useLocation();
@@ -136,9 +137,18 @@ const AppContent = () => {
 };
 
 const App = () => {
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Simulate a loading delay (e.g., fetching data)
+    const timer = setTimeout(() => setLoading(false), 2000);
+
+    return () => clearTimeout(timer);
+  }, []);
   return (
+    loading ? <Preloader /> : 
     <Router>
-      <AppContent />
+   <AppContent />
     </Router>
   );
 };
