@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { apiRequest } from "../utils/api";
+
 const Signup = () => {
   const [formData, setFormData] = useState({
     name: "",
@@ -21,12 +24,12 @@ const Signup = () => {
     setError(null);
 
     if (formData.password !== formData.confirmPassword) {
-      setError("Passwords do not match");
+      toast.error("Passwords do not match");
       return;
     }
 
     if (formData.password.length < 6) {
-      setError("Password must be at least 6 characters long");
+      toast.error("Password must be at least 6 characters long");
       return;
     }
 
@@ -36,25 +39,19 @@ const Signup = () => {
         email: formData.email,
         password: formData.password,
       });
-      navigate("/login", {
-        state: { message: "Account created successfully! Please login." },
-      });
+      toast.success("Account created successfully! Redirecting to login...");
+      setTimeout(() => navigate("/login"), 3000);
     } catch (err) {
-      setError(err.message || "Signup failed. Please try again.");
+      toast.error(err.message || "Signup failed. Please try again.");
     }
   };
 
   return (
     <div className="flex w-full justify-center items-center min-h-screen bg-gray-100 dark:bg-gray-900 transition-colors duration-300">
+      <ToastContainer position="top-right" autoClose={3000} />
       <div className="w-full sm:w-96 bg-white dark:bg-gray-800 p-8 rounded-lg shadow-xl">
         <h2 className="text-4xl font-semibold text-center text-gray-800 dark:text-gray-200 mb-8">Sign Up</h2>
         <form onSubmit={handleSubmit}>
-          {error && (
-            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-              {error}
-            </div>
-          )}
-
           <input
             type="text"
             name="name"

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { apiRequest } from "../utils/api";
 import { Menu } from "lucide-react";
+import { toast } from "react-toastify";
 
 const Home = () => {
   const [questions, setQuestions] = useState([]);
@@ -36,8 +37,12 @@ const Home = () => {
           (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
         );
         setQuestions(sortedQuestions);
+        toast.success("Questions loaded successfully!", { autoClose: 2000 });
       } catch (error) {
         console.error("Error fetching questions:", error);
+        toast.error("Failed to load questions. Please try again later.", {
+          autoClose: 3000,
+        });
       } finally {
         setLoading(false);
       }
@@ -68,6 +73,7 @@ const Home = () => {
 
   const handleCategoryClick = (category) => {
     setSearchParams({ category });
+    toast.info(`Category changed to: ${category}`, { autoClose: 1500 });
   };
 
   return (

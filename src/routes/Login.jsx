@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { apiRequest } from "../utils/api";
 
 const Login = () => {
@@ -16,26 +18,22 @@ const Login = () => {
       const response = await apiRequest("/auth/login", "POST", { email, password });
       if (response.token) {
         localStorage.setItem("token", response.token);
-        navigate("/", { replace: true });
+        toast.success("Login successful! Redirecting...");
+        setTimeout(() => navigate("/", { replace: true }), 2000);
       } else {
-        setError("Invalid response from server");
+        toast.error("Invalid response from server");
       }
     } catch (err) {
-      setError(err.message || "Invalid credentials. Please try again.");
+      toast.error(err.message || "Invalid credentials. Please try again.");
     }
   };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900 transition-colors duration-300">
+      <ToastContainer position="top-right" autoClose={3000} />
       <div className="w-full sm:w-96 bg-white dark:bg-gray-800 p-8 rounded-lg shadow-xl">
         <h2 className="text-4xl font-semibold text-center text-gray-800 dark:text-gray-200 mb-8">Login</h2>
         <form onSubmit={handleSubmit}>
-          {error && (
-            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-              {error}
-            </div>
-          )}
-
           <input
             type="email"
             placeholder="Email"
