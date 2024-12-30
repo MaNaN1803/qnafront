@@ -2,17 +2,27 @@ import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import ReCAPTCHA from "react-google-recaptcha";
 import { apiRequest } from "../utils/api";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState(null);
+  const [captchaValid, setCaptchaValid] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(null);
+
+    if (!email.endsWith("@gmail.com")) {
+      toast.error("Only Gmail IDs are allowed.");
+      return;
+    }
+
+    if (!captchaValid) {
+      toast.error("Please verify the CAPTCHA.");
+      return;
+    }
 
     try {
       const response = await apiRequest("/auth/login", "POST", { email, password });
@@ -26,6 +36,10 @@ const Login = () => {
     } catch (err) {
       toast.error(err.message || "Invalid credentials. Please try again.");
     }
+  };
+
+  const handleCaptchaChange = (value) => {
+    setCaptchaValid(!!value);
   };
 
   return (
@@ -49,6 +63,11 @@ const Login = () => {
             onChange={(e) => setPassword(e.target.value)}
             className="w-full p-4 mb-6 border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-200 rounded-lg focus:ring-2 focus:ring-gray-500 transition-all duration-300"
             required
+          />
+          <ReCAPTCHA
+            sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"
+            onChange={handleCaptchaChange}
+            className="mb-6"
           />
           <button
             type="submit"
