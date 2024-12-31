@@ -10,9 +10,16 @@ import 'filepond/dist/filepond.min.css';
 import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css';
 import FilePondPluginImagePreview from 'filepond-plugin-image-preview';
 import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type';
+import FilePondPluginImageResize from 'filepond-plugin-image-resize';
+import FilePondPluginImageTransform from 'filepond-plugin-image-transform';
 
 // Register FilePond plugins
-registerPlugin(FilePondPluginImagePreview, FilePondPluginFileValidateType);
+registerPlugin(
+  FilePondPluginImagePreview,
+  FilePondPluginFileValidateType,
+  FilePondPluginImageResize,
+  FilePondPluginImageTransform
+);
 
 const SubmitQuestion = () => {
   const categories = [
@@ -107,7 +114,7 @@ const SubmitQuestion = () => {
   };
 
   return (
-    <div className="max-w-lg mx-auto mt-20 bg-white dark:bg-gray-800 p-6 rounded shadow dark:border-gray-700 dark:text-white">
+    <div className="max-w-lg mx-auto bg-white dark:bg-gray-800 p-6 rounded shadow dark:border-gray-700 dark:text-white">
       <h2 className="text-2xl font-bold mb-4 text-center">Submit a Question</h2>
       {error && <p className="text-red-500 mb-4">{error}</p>}
       <form onSubmit={handleSubmit}>
@@ -199,6 +206,11 @@ const SubmitQuestion = () => {
             allowMultiple={true}
             acceptedFileTypes={['image/*']}
             labelIdle='Drag & Drop your images or <span class="filepond--label-action">Browse</span>'
+            imageResizeTargetWidth={800}
+            imageResizeTargetHeight={600}
+            imageResizeMode="cover"
+            imageResizeUpscale={false}
+            imageTransformOutputQuality={0.7}
           />
           {uploading && <p className="text-blue-500 mt-2">Uploading images...</p>}
         </div>
