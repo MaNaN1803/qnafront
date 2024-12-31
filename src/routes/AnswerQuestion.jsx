@@ -216,30 +216,34 @@ const AnswerQuestion = () => {
               </div>
 
               {/* Image Carousel */}
-              {question.images?.length > 0 && (
-                <div className="rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700 shadow-md">
-                  <Carousel
-                    showThumbs={false}
-                    dynamicHeight={true}
-                    infiniteLoop={true}
-                    autoPlay={true}
-                    showStatus={false}
-                    className="carousel-container"
-                    showArrows={true}
-                    swipeable={true}
-                  >
-                    {question.images.map((image, index) => (
-                      <div key={index} className="aspect-w-16 aspect-h-9">
-                        <img
-                          src={image.startsWith("http") ? image : `http://localhost:5000/${image}`}
-                          alt={`Slide ${index + 1}`}
-                          className="object-cover w-full h-full"
-                        />
-                      </div>
-                    ))}
-                  </Carousel>
-                </div>
-              )}
+{question.images?.length > 0 && (
+  <div className="rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700 shadow-md">
+    <Carousel
+      showThumbs={false}
+      dynamicHeight={false} // Disable dynamic height for consistent size
+      infiniteLoop={true}
+      autoPlay={true}
+      showStatus={false}
+      showArrows={true}
+      swipeable={true}
+      className="carousel-container"
+    >
+      {question.images.map((image, index) => (
+        <div
+          key={index}
+          className="flex items-center justify-center bg-gray-100 dark:bg-gray-800"
+        >
+          <img
+            src={image.startsWith("http") ? image : `http://localhost:5000/${image}`}
+            alt={`Slide ${index + 1}`}
+            className="w-full h-[400px] object-cover"
+          />
+        </div>
+      ))}
+    </Carousel>
+  </div>
+)}
+
 
               {/* Question Details */}
               <div className="grid grid-cols-2 gap-4 pt-4 border-t border-gray-100 dark:border-gray-700">
