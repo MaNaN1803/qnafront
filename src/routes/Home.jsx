@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { apiRequest } from "../utils/api";
-import { Menu } from "lucide-react";
 import { toast } from "react-toastify";
+import { Menu, ThumbsUp, ThumbsDown } from "lucide-react";
 
 const Home = () => {
   const [questions, setQuestions] = useState([]);
@@ -75,6 +75,41 @@ const Home = () => {
     setSearchParams({ category });
     toast.info(`Category changed to: ${category}`, { autoClose: 1500 });
   };
+  const handleVote = async (id, voteType, contentType) => {
+    try {
+      console.log('Sending vote request:', { id, voteType, contentType });
+      const token = localStorage.getItem('authToken');
+      if (!token) {
+        toast.error('You must be logged in to vote!');
+        return;
+      }
+  
+      const endpoint = contentType === 'question' ? `/questions/${id}/vote` : `/answers/${id}/vote`;
+      console.log('API Endpoint:', endpoint);
+  
+      const response = await apiRequest(endpoint, 'PUT', { vote: voteType }, token);
+      console.log('Vote response:', response);
+  
+      if (response.success) {
+        console.log('Vote successful!');
+
+        setQuestions((prevQuestions) =>
+          prevQuestions.map((q) =>
+            q._id === id ? { ...q, votes: q.votes + (voteType === 'up' ? 1 : -1) } : q
+          )
+        );
+        toast.success(`${voteType === 'up' ? 'Upvoted' : 'Downvoted'} successfully!`);
+      } else {
+        console.log('Vote failed:', response.error);
+        toast.error(`Failed to ${voteType}vote. Try again.`);
+      }
+    } catch (error) {
+      toast.error(`Failed to ${voteType}vote. Try again.`);
+      console.error('Error voting:', error);
+    }
+  };
+  
+  
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
@@ -189,8 +224,25 @@ const Home = () => {
                         </span>
                       </p>
                     </div>
-                  </div>
-                ))}
+                    <div className="flex items-center gap-2 ml-auto">
+        <button
+          onClick={() => handleVote(question._id, 'up')}
+          className="flex items-center gap-1 px-2 py-1 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-300"
+          aria-label="Upvote"
+        >
+          <ThumbsUp className={`h-4 w-4 ${question.votes > 0 ? 'text-green-500' : 'text-gray-500'}`} />
+          <span className="text-sm font-medium">{question.votes || 0}</span>
+        </button>
+        <button
+          onClick={() => handleVote(question._id, 'down')}
+          className="flex items-center gap-1 px-2 py-1 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-300"
+          aria-label="Downvote"
+        >
+          <ThumbsDown className={`h-4 w-4 ${question.votes < 0 ? 'text-red-500' : 'text-gray-500'}`} />
+        </button>
+      </div>
+    </div>
+  ))}
               </div>
             ) : (
               <p className="text-gray-500 dark:text-gray-400 text-center mt-6 transition-colors duration-300">

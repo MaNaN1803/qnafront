@@ -18,6 +18,7 @@ import {
   Award,
   Eye
 } from 'lucide-react';
+import { toast } from "react-toastify";
 
 const AnswerQuestion = () => {
   const { id } = useParams();
@@ -128,6 +129,26 @@ const AnswerQuestion = () => {
       return newSet;
     });
   };
+
+  const handleVote = async (id, voteType, contentType) => {
+      try {
+        const token = localStorage.getItem("authToken"); // Retrieve the token from localStorage
+        
+        if (!token) {
+          toast.error("You must be logged in to vote!");
+          return;
+        }
+    
+        const endpoint = contentType === 'question' ? `/questions/${id}/vote` : `/api/answers/${id}/vote`;
+        await apiRequest(endpoint, 'PUT', { vote: voteType }, token); // Pass token to apiRequest
+        toast.success(`${voteType === 'up' ? 'Upvoted' : 'Downvoted'} successfully!`);
+        // Optionally refresh data or update state
+      } catch (error) {
+        toast.error(`Failed to ${voteType}vote. Try again.`);
+        console.error('Error voting:', error);
+      }
+    };
+  
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 py-12 px-4 sm:px-6 lg:px-8">
@@ -352,6 +373,22 @@ const AnswerQuestion = () => {
                           </span>
                         </button>
                       </div>
+                      <div className="flex items-center gap-2">
+  <button
+    onClick={() => handleVote(answer._id, 'up', 'answer')}
+    className="text-green-500 hover:text-green-700"
+  >
+    Upvote
+  </button>
+  <span>{answer.votes}</span>
+  <button
+    onClick={() => handleVote(answer._id, 'down', 'answer')}
+    className="text-red-500 hover:text-red-700"
+  >
+    Downvote
+  </button>
+</div>
+
                     </div>
                   </div>
                 </div>
