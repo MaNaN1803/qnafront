@@ -15,6 +15,7 @@ import AdminDashboard from './routes/AdminDashboard';
 import ModeratorDashboard from './routes/ModeratorDashboard';
 import NotFound from './routes/NotFound';
 import Preloader from './components/Preloader';
+import EditProfile from './routes/EditProfile';
 
 const AppContent = () => {
   const location = useLocation();
@@ -106,6 +107,7 @@ const AppContent = () => {
               </PrivateRoute>
             }
           />
+          <Route path="/edit-profile" element={<PrivateRoute><EditProfile /></PrivateRoute>} />
           <Route
             path="/questions/:id"
             element={
