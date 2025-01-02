@@ -59,18 +59,28 @@ const EditProfile = ({ darkMode, setDarkMode }) => {
       formData.append('email', profile.email);
       if (profile.password) formData.append('password', profile.password);
       if (profilePicture.length > 0) formData.append('profilePicture', profilePicture[0].file);
-
-      await apiRequest('/auth/profile', 'PUT', formData, token, true);
+  
+      console.log([...formData.entries()]); // Debugging: Log data before sending
+  
+      const response = await apiRequest('/auth/profile', 'PUT', formData, token, true);
+  
+      // Update profile state with response data
+      setProfile({
+        name: response.user.name,
+        email: response.user.email,
+        password: '', // Clear the password field
+      });
       toast.success('Profile updated successfully!');
       navigate('/profile');
     } catch (err) {
-      console.error('Error updating profile:', err);
+      console.error('Error updating profile:', err.message);
       setError('Failed to update profile. Please try again.');
-      toast.error('Failed to update profile.');
+      toast.error(err.message || 'Failed to update profile.');
     } finally {
       setSubmitting(false);
     }
   };
+  
 
   if (loading)
     return (
