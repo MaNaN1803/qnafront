@@ -12,6 +12,7 @@ import {
   ChevronDown, 
   ChevronUp, 
   ThumbsUp,
+  ThumbsDown,
   Share2,
   Bookmark,
   AlertCircle,
@@ -131,23 +132,46 @@ const AnswerQuestion = () => {
   };
 
   const handleVote = async (id, voteType, contentType) => {
-      try {
-        const token = localStorage.getItem("authToken"); // Retrieve the token from localStorage
-        
-        if (!token) {
-          toast.error("You must be logged in to vote!");
-          return;
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        toast.error('Please login to vote');
+        navigate('/login');
+        return;
+      }
+  
+      const endpoint = contentType === 'question' ? `/questions/${id}/vote` : `/answers/${id}/vote`;
+      const response = await apiRequest(endpoint, 'PUT', { vote: voteType }, token);
+  
+      if (response) {
+        if (contentType === 'question') {
+          setQuestion(prev => ({
+            ...prev,
+            votes: response.votes,
+            voters: response.voters
+          }));
+        } else {
+          setAnswers(prevAnswers =>
+            prevAnswers.map(answer =>
+              answer._id === id
+                ? { ...answer, votes: response.votes, voters: response.voters }
+                : answer
+            )
+          );
         }
-    
-        const endpoint = contentType === 'question' ? `/questions/${id}/vote` : `/api/answers/${id}/vote`;
-        await apiRequest(endpoint, 'PUT', { vote: voteType }, token); // Pass token to apiRequest
+        
         toast.success(`${voteType === 'up' ? 'Upvoted' : 'Downvoted'} successfully!`);
-        // Optionally refresh data or update state
-      } catch (error) {
-        toast.error(`Failed to ${voteType}vote. Try again.`);
+      }
+    } catch (error) {
+      const errorMessage = error.message || 'Failed to vote. Please try again.';
+      if (errorMessage.includes('already voted')) {
+        toast.warning('You have already voted on this content');
+      } else {
+        toast.error(errorMessage);
         console.error('Error voting:', error);
       }
-    };
+    }
+  };
   
 
   return (
@@ -373,22 +397,35 @@ const AnswerQuestion = () => {
                           </span>
                         </button>
                       </div>
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-4 mt-4">
   <button
     onClick={() => handleVote(answer._id, 'up', 'answer')}
-    className="text-green-500 hover:text-green-700"
+    className="flex items-center gap-1 px-3 py-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-300"
+    aria-label="Upvote"
   >
-    Upvote
+    <ThumbsUp 
+      className={`h-4 w-4 ${
+        answer.voters?.some(v => v.user === localStorage.getItem('userId') && v.vote === 1)
+          ? 'text-green-500'
+          : 'text-gray-500'
+      }`} 
+    />
+    <span className="text-sm font-medium ml-1">{answer.votes || 0}</span>
   </button>
-  <span>{answer.votes}</span>
   <button
     onClick={() => handleVote(answer._id, 'down', 'answer')}
-    className="text-red-500 hover:text-red-700"
+    className="flex items-center gap-1 px-3 py-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-300"
+    aria-label="Downvote"
   >
-    Downvote
+    <ThumbsDown 
+      className={`h-4 w-4 ${
+        answer.voters?.some(v => v.user === localStorage.getItem('userId') && v.vote === -1)
+          ? 'text-red-500'
+          : 'text-gray-500'
+      }`} 
+    />
   </button>
 </div>
-
                     </div>
                   </div>
                 </div>

@@ -75,40 +75,42 @@ const Home = () => {
     setSearchParams({ category });
     toast.info(`Category changed to: ${category}`, { autoClose: 1500 });
   };
-  const handleVote = async (id, voteType, contentType) => {
+  const handleVote = async (questionId, voteType) => {
     try {
-      console.log('Sending vote request:', { id, voteType, contentType });
-      const token = localStorage.getItem('authToken');
+      const token = localStorage.getItem('token');
       if (!token) {
-        toast.error('You must be logged in to vote!');
+        toast.error('Please login to vote');
+        navigate('/login');
         return;
       }
-  
-      const endpoint = contentType === 'question' ? `/questions/${id}/vote` : `/answers/${id}/vote`;
-      console.log('API Endpoint:', endpoint);
-  
-      const response = await apiRequest(endpoint, 'PUT', { vote: voteType }, token);
-      console.log('Vote response:', response);
-  
-      if (response.success) {
-        console.log('Vote successful!');
 
-        setQuestions((prevQuestions) =>
-          prevQuestions.map((q) =>
-            q._id === id ? { ...q, votes: q.votes + (voteType === 'up' ? 1 : -1) } : q
+      const response = await apiRequest(
+        `/questions/${questionId}/vote`,
+        'PUT',
+        { vote: voteType },
+        token
+      );
+
+      if (response) {
+        setQuestions(prevQuestions =>
+          prevQuestions.map(q =>
+            q._id === questionId
+              ? { ...q, votes: response.votes }
+              : q
           )
         );
+        
         toast.success(`${voteType === 'up' ? 'Upvoted' : 'Downvoted'} successfully!`);
-      } else {
-        console.log('Vote failed:', response.error);
-        toast.error(`Failed to ${voteType}vote. Try again.`);
       }
     } catch (error) {
-      toast.error(`Failed to ${voteType}vote. Try again.`);
-      console.error('Error voting:', error);
+      const errorMessage = error.message || 'Failed to vote. Please try again.';
+      if (errorMessage.includes('already voted')) {
+        toast.warning('You have already voted on this question');
+      } else {
+        toast.error(errorMessage);
+      }
     }
   };
-  
   
 
   return (
@@ -230,7 +232,13 @@ const Home = () => {
           className="flex items-center gap-1 px-2 py-1 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-300"
           aria-label="Upvote"
         >
-          <ThumbsUp className={`h-4 w-4 ${question.votes > 0 ? 'text-green-500' : 'text-gray-500'}`} />
+          <ThumbsUp 
+            className={`h-4 w-4 ${
+              question.voters?.some(v => v.user === localStorage.getItem('userId') && v.vote === 1)
+                ? 'text-green-500'
+                : 'text-gray-500'
+            }`} 
+          />
           <span className="text-sm font-medium">{question.votes || 0}</span>
         </button>
         <button
@@ -238,7 +246,13 @@ const Home = () => {
           className="flex items-center gap-1 px-2 py-1 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-300"
           aria-label="Downvote"
         >
-          <ThumbsDown className={`h-4 w-4 ${question.votes < 0 ? 'text-red-500' : 'text-gray-500'}`} />
+          <ThumbsDown 
+            className={`h-4 w-4 ${
+              question.voters?.some(v => v.user === localStorage.getItem('userId') && v.vote === -1)
+                ? 'text-red-500'
+                : 'text-gray-500'
+            }`} 
+          />
         </button>
       </div>
     </div>
