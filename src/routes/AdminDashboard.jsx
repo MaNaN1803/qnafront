@@ -3,8 +3,9 @@ import UserManagement from '../components/admin/UserManagement';
 import ReportManagement from '../components/admin/ReportManagement';
 import Analytics from '../components/admin/Analytics';
 import SystemSettings from '../components/admin/SystemSettings';
+import ContentModeration from '../components/admin/ContentModeration';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/Tabs';
-import { Users, Flag, BarChart2, Settings } from 'lucide-react';
+import { Users, Flag, BarChart2, Settings, FileText } from 'lucide-react';
 
 const AdminDashboard = () => {
   return (
@@ -25,12 +26,14 @@ const AdminDashboard = () => {
             <Flag size={20} />
             <span>Reports</span>
           </TabsTrigger>
+          <TabsTrigger value="content" className="flex items-center space-x-2">
+            <FileText size={20} />
+            <span>Content Moderation</span>
+          </TabsTrigger>
           <TabsTrigger value="settings" className="flex items-center space-x-2">
             <Settings size={20} />
             <span>Settings</span>
           </TabsTrigger>
-         
-
         </TabsList>
 
         <TabsContent value="analytics">
@@ -45,10 +48,13 @@ const AdminDashboard = () => {
           <ReportManagement />
         </TabsContent>
 
+        <TabsContent value="content">
+          <ContentModeration />
+        </TabsContent>
+
         <TabsContent value="settings">
           <SystemSettings />
         </TabsContent>
-
       </Tabs>
     </div>
   );
