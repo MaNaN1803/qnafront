@@ -172,7 +172,7 @@ const SubmitQuestion = () => {
             style={{ height: '300px', width: '100%' }}
           >
             <TileLayer
-              url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+              url="https://mt0.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}"
               attribution="&copy; Esri &mdash; Esri, DeLorme, NAVTEQ"
             />
             <UpdateMapCenter />
