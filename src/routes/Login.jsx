@@ -13,38 +13,70 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
+    if (!email) {
+      toast.error("Please enter your email address");
+      return;
+    }
+  
     if (!email.endsWith("@gmail.com")) {
-      toast.error("Only Gmail IDs are allowed.");
+      toast.error("Please use a valid Gmail address");
       return;
     }
-
+  
+    if (!password) {
+      toast.error("Please enter your password");
+      return;
+    }
+  
     if (!captchaValid) {
-      toast.error("Please verify the CAPTCHA.");
+      toast.error("Please complete the CAPTCHA verification");
       return;
     }
-
+  
     try {
       const response = await apiRequest("/auth/login", "POST", { email, password });
+  
       if (response.token) {
         localStorage.setItem("token", response.token);
-        toast.success("Login successful! Redirecting...");
+        toast.success("Login successful! Redirecting to dashboard...");
         setTimeout(() => navigate("/", { replace: true }), 2000);
-      } else {
-        toast.error("Invalid response from server");
       }
-    } catch (err) {
-      toast.error(err.message || "Invalid credentials. Please try again.");
+    } catch (error) {
+      if (error.response) {
+        const { status, data } = error.response;
+        if (status === 404) {
+          toast.error("User does not exist. Please check your email address or sign up");
+        } 
+      } else {
+        toast.error("Invalid login credentials. Please verify that your email address and password are correct and try again.");
+      }
     }
   };
-
   const handleCaptchaChange = (value) => {
     setCaptchaValid(!!value);
   };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900 transition-colors duration-300">
-      <ToastContainer position="top-right" autoClose={3000} />
+     <ToastContainer
+  position="top-right"
+  autoClose={4000}
+  hideProgressBar={false}
+  newestOnTop={true}
+  closeOnClick
+  rtl={false}
+  pauseOnFocusLoss
+  draggable
+  pauseOnHover
+  theme="colored"
+  toastStyle={{
+    backgroundColor: "#333",
+    color: "#fff",
+    borderRadius: "8px",
+    fontWeight: "bold",
+  }}
+      />
       <div className="w-full sm:w-96 bg-white dark:bg-gray-800 p-8 rounded-lg shadow-xl">
         <h2 className="text-4xl font-semibold text-center text-gray-800 dark:text-gray-200 mb-8">Login</h2>
         <form onSubmit={handleSubmit}>

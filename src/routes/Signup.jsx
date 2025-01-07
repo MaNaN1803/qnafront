@@ -15,46 +15,45 @@ const Signup = () => {
   const [captchaValid, setCaptchaValid] = useState(false);
   const [shownameInfo, setShownameInfo] = useState(false); // State to control modal visibility
   const navigate = useNavigate();
-
   const adjectives = [
-    "Bold", "Quick", "Bright", "Chill", "Lucky", "Brave", "Clever", "Swift", "Energetic", "Smart",
-    "Wise", "Creative", "Happy", "Serene", "Radiant", "Quiet", "Curious", "Loyal", "Fearless", "Mighty",
-    "Strong", "Vibrant", "Charming", "Playful", "Brilliant", "Gentle", "Jolly", "Daring", "Graceful", "Noble",
-    "Pure", "Fierce", "Adventurous", "Endless", "Jovial", "Quiet", "Joyful", "Patient", "Optimistic", "Friendly",
-    "Vigorous", "Sociable", "Energetic", "Steady", "Brisk", "Bold", "Gallant", "Dynamic", "Witty", "Imaginative",
-    "Innovative", "Compassionate", "Sincere", "Humble", "Determined", "Fearless", "Diligent", "Ambitious", "Gutsy",
-    "Sensible", "Mellow", "Spirited", "Adorable", "Harmonious", "Luminous", "Upbeat", "Flourishing", "Hopeful",
-    "Caring", "Playful", "Unstoppable", "Nurturing", "Lively", "Effervescent", "Radiant", "Positive", "Refreshing",
-    "Mature", "Flawless", "Confident", "Wild", "Unbreakable", "Dynamic", "Authentic", "Adventurous", "Enthusiastic",
-    "Wise", "Resourceful", "Bouncy", "Bright-eyed", "Hearty", "Invincible", "Loving", "Steadfast", "Gallant", "Playful",
-    "Determined", "Unique", "Zesty", "Endearing", "Sincere", "Inspiring", "Peaceful", "Resilient", "Composed",
-    "Cheerful", "Magnetic", "Exuberant", "Fearless", "Relentless", "Blissful", "Vibrant", "Persistent", "Graceful",
-    "Joyous", "Peaceful", "Upstanding", "Solid", "Refreshing", "Effortless", "Indomitable", "Serene", "Soft-hearted",
-    "Majestic", "Hardworking", "Fiery", "Spunky", "Generous", "Luminous", "Honorable", "Innovative", "Unyielding",
-    "Bold-hearted", "Dashing", "Soft-spoken", "Thriving", "Sociable", "Grounded", "Mellow", "Relaxed", "Blazing"
-  ];
-  
-  const nouns = [
-    "Fox", "Hawk", "Bear", "Wave", "Shade", "Storm", "Lion", "Eagle", "Tiger", "Dragon",
-    "Shark", "Wolf", "Flame", "Frost", "Sun", "Moon", "Cloud", "Thunder", "Snow", "Ocean",
-    "Flare", "Phoenix", "Bolt", "Dove", "Viper", "Panther", "Cheetah", "Falcon", "Whale",
-    "Wolf", "Hummingbird", "Hawk", "Mantis", "Eagle", "Bear", "Crane", "Falcon", "Tiger",
-    "Jaguar", "Lion", "Seagull", "Swallow", "Puma", "Crocodile", "Grizzly", "Wolf", "Lion",
-    "Leopard", "Zebra", "Kangaroo", "Bison", "Koala", "Penguin", "Wolverine", "Otter", "Sparrow",
-    "Owl", "Cougar", "Dolphin", "Turtle", "Lynx", "Butterfly", "Giraffe", "Gorilla", "Lemur",
-    "Hedgehog", "Rabbit", "Moose", "Whale", "Fox", "Beaver", "Sparrow", "Ostrich", "Alligator",
-    "Zebra", "Pelican", "Kangaroo", "Panther", "Cheetah", "Snake", "Chameleon", "Rabbit", "Elephant",
-    "Vulture", "Parrot", "Pigeon", "Horse", "Wildebeest", "Goose", "Camel", "Dragonfly", "Raven",
-    "Mole", "Swan", "Duck", "Camel", "Bear", "Tortoise", "Horse", "Koala", "Lynx", "Crow",
-    "Hawk", "Bison", "Coyote", "Deer", "Peacock", "Moose", "Geese", "Scorpion", "Bat",
-    "Caterpillar", "Lizard", "Frog", "Antelope", "Penguin", "Crocodile", "Fawn", "Lamb",
-    "Chinchilla", "Otter", "Shrew", "Fowl", "Raccoon", "Fox", "Kangaroo", "Shark", "Tortoise",
-    "Goose", "Salmon", "Shrimp", "Mole", "Octopus", "Squid", "Starfish", "Gull", "Mantis",
-    "Hummingbird", "Firefly", "Whale", "Cheetah", "Jaguar", "Parrot", "Falcon", "Bison", "Eagle",
-    "Tiger", "Vulture", "Rabbit", "Beetle", "Flamingo", "Hornet", "Owl", "Dolphin", "Mantis",
-    "Giraffe", "Penguin", "Snake", "Lion", "Whale", "Pigeon", "Coyote", "Antelope", "Crow",
-    "Pelican", "Eagle", "Frog", "Koala", "Sparrow", "Bat", "Bison", "Whale", "Hawk", "Fox"
-  ];
+    "Chai88", "Lassi7", "Cool12", "Desi99", "Masala22", "Samosa9", "Bollywood5", "Paneer14", "Curry11", "GolGappa77",
+    "Biryani1", "Tandoori33", "Spicy88", "Dosa21", "Roti55", "Rajma19", "Butter4", "Naan60", "Pakka10", "Chatori27",
+    "Khaati2", "Garam70", "Zesty16", "Fluffy9", "Jalwa31", "Dhamaka99", "Thali8", "Andaz57", "Swag25", "Mithai18",
+    "Kesar32", "Rasmalai43", "Pista12", "Gulab56", "Bhaijaan34", "Dhamal13", "Tikka64", "Doodh4", "Halwa38", "Makhni23",
+    "Chatpata29", "Puchka5", "Andaaz90", "Shahi73", "Royal18", "Khatti4", "Sweet31", "Aloo13", "DesiCool66", "Classic22",
+    "Khaas14", "Zabardast9", "Kadak30", "Swaggy17", "Heera45", "Chatori56", "Baingan9", "Rang27", "Butterlicious10", "Kabab33",
+    "Zing15", "Fried5", "Chutney21", "Bhel7", "Pakora34", "Tandoor23", "Shahi5", "Mango39", "Jalebi44", "Fresco32",
+    "Kebab18", "Badshah11", "Shaadi50", "Nashte64", "Patakha1", "Rajput2", "Chatka99", "LassiSwag4", "AlooMasti16", "BiryaniRaja2",
+    "GulabJamun9", "Sheermal18", "MithaiMaan10", "MirchMasala11", "PaniPuri3", "Pakodi7", "JalebiKing17", "Raita5", "TandoorVibes22",
+    "Chingari10", "Chawal16", "Kachori5", "Jugaad29", "DilliWala12", "Patiala7", "GulabRaja18", "KesarLover9", "Mawa12", "CurryKing34",
+    "MasalaLover23", "Kadhi11", "PavBhaji30", "TikkaMasala1", "ButterNaan12", "ChaatKing24", "Pyaaz16", "PaneerMasti8", "DesiRaja3",
+    "AlooTikki7", "BiryaniRani9", "KadhiPakora12", "Meetha17", "TandooriMasti7", "Zaitoon33", "DesiTadka2", "ChutneyLover8", "GulabSweets12",
+    "Khoya13", "GajarHalwa2", "LassiMan7", "MithiMithai6", "Swaad5", "RotiWala23", "Dum15", "AlooChaat17", "PistaBarfi9", "ChanaChaat11",
+    "ChanaMasala6", "LassiQueen12", "AlooGobi4", "NaanBaba10", "TikkaWala5", "RoyalBiryani2", "DosaSwag1", "PannaCotta7", "TandooriMagic11",
+    "MithaiMania6", "Papad5", "GulabJamunKing2", "MirchBiryani10", "DosaDhamaka9", "AlooParatha8", "SamosaDuke17", "MasalaTadka33", 
+    "BiryaniGuru4", "BhaiyaVibes12", "Methi6", "MawaDelight11", "PistaLover8", "Makkhan7", "TandooriKing9", "MirchMasala7", "Peshawari12",
+    "BiryaniLove22", "AlooWala33", "GulabWala11", "PaanKing5", "PaneerKing16", "ChappalSwag18", "MithiMithai9", "PuriMania7", "SabziKing12",
+    "Kaddu2", "Bhature9", "Chole5", "Gajar9", "Rava6", "MethiWala11", "Kheema7", "Rasam22", "CurryWala5", "AlooGhee33"
+];
+
+const nouns = [
+  "Wala", "Lover", "Bhaiya", "King", "Rider", "Magic", "Fan", "Buff", "Lover", "Craze",
+  "Nawab", "Dancer", "Boss", "Queen", "Dude", "Champion", "Dhamaka", "Master", "Ruler", "Shan",
+  "Bhakt", "Guru", "Chowkidar", "Foodie", "Prince", "Addict", "Chef", "Explorer", "Eater", "Snack",
+  "Kingpin", "Monarch", "Pataka", "Baba", "Knight", "Sher", "Sundar", "Wali", "Pehelwan", "Tadka",
+  "Rockstar", "Admi", "Badshah", "Maharaja", "Sakhi", "Tiger", "Khiladi", "Sardar", "Babu", "Queen",
+  "Captain", "Samosa", "Masti", "Bhature", "Lassi", "Kachori", "Paratha", "Kheer", "Paan", "Laddoo",
+  "Maharani", "Desi", "Sundar", "Puri", "Samosa", "Singh", "Tandoori", "Wale", "Foodie", "Gulab",
+  "Maharaj", "Jazba", "Champion", "Prince", "Thakur", "Raja", "Shahenshah", "Rani", "Baba", "Zaheer",
+  "Mithai", "Sherpa", "Badshahi", "Mithai", "Kebab", "Sardar", "Babu", "Mahi", "Pachis", "RajaBabu",
+  "Mochi", "Chowkidar", "MithaiWala", "Pataka", "Curry", "Khush", "Vichar", "Guruji", "Mukti", "RaniMaa",
+  "Taj", "Zinda", "Shah", "Gourmet", "Swaad", "Sweets", "Mirchi", "Raza", "Ustaad", "Dharma",
+  "Ali", "Garam", "Shehzada", "Rattan", "Patiala", "Ghazi", "Jazba", "Jaggi", "RamLover", "Haveli",
+  "SherWala", "ThaliWala", "Chota", "Ratan", "Bandhu", "LassiDuke", "TandoorKing", "BiryaniMania", 
+  "BiryaniQueen", "MasalaRaja", "RajmaWala", "Pind", "Shashi", "Tandoori", "MithaiWala", "Butter",
+  "Ghee", "SundarWala", "Bajra", "Gajra", "Bhindi", "KachoriMaster", "BiryaniWala", "SamosaRani",
+  "KheerWala", "CholeBhature", "WalePataka", "GulabSwag", "Murg", "AlooWala", "Pineapple", "Mango"
+];
   
 
   const generatename = () => {
@@ -74,35 +73,43 @@ const Signup = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     if (!formData.email.endsWith("@gmail.com")) {
       toast.error("Only Gmail IDs are allowed.");
       return;
     }
-
+  
     if (formData.password !== formData.confirmPassword) {
       toast.error("Passwords do not match.");
       return;
     }
-
+  
     if (!captchaValid) {
       toast.error("Please verify the CAPTCHA.");
       return;
     }
-
+  
     try {
       const response = await apiRequest("/auth/signup", "POST", {
-        name: formData.name, // Map the name field
+        name: formData.name,
         email: formData.email,
         password: formData.password,
       });
+  
       toast.success("Account created successfully! Redirecting to login...");
       setTimeout(() => navigate("/login"), 3000);
     } catch (err) {
-      toast.error(err.message || "Signup failed. Please try again.");
+      const errorMessage = err.response?.data?.message || err.message;
+  
+      // Handle duplicate key error
+      if (errorMessage.includes("E11000 duplicate key error")) {
+        toast.error("A user with this email already exists. try with another I'd.");
+      } else {
+        toast.error("Signup failed. Please try again.");
+      }
     }
   };
-
+  
   const handleCaptchaChange = (value) => {
     setCaptchaValid(!!value);
   };
