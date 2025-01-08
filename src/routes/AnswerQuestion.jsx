@@ -17,7 +17,8 @@ import {
   Bookmark,
   AlertCircle,
   Award,
-  Eye
+  Eye,
+  List
 } from 'lucide-react';
 import { toast } from "react-toastify";
 
@@ -28,6 +29,7 @@ const AnswerQuestion = () => {
   const [content, setContent] = useState("");
   const [error, setError] = useState("");
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
+  const [isAttemptsExpanded, setIsAttemptsExpanded] = useState(false);
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [helpfulAnswers, setHelpfulAnswers] = useState(new Set());
   const navigate = useNavigate();
@@ -311,11 +313,35 @@ const AnswerQuestion = () => {
                   <Calendar className="w-5 h-5 mr-2 text-green-500 dark:text-green-400" />
                   <span className="text-sm">{formatDate(question.createdAt)}</span>
                 </div>
-                <div className="flex items-center text-gray-600 dark:text-gray-300 bg-gray-50 dark:bg-gray-700/50 p-3 rounded-lg">
-                  <Activity className="w-5 h-5 mr-2 text-purple-500 dark:text-purple-400" />
-                  <span className="text-sm">
-                    {question.attempts || "No"} attempts
-                  </span>
+                <div className="flex flex-col text-gray-600 dark:text-gray-300 bg-gray-50 dark:bg-gray-700/50 p-3 rounded-lg">
+                  <div className="flex items-center">
+                    <Activity className="w-5 h-5 mr-2 text-purple-500 dark:text-purple-400" />
+                    <span className="text-sm">
+                      <List className="w-5 h-5 mr-2 text-blue-500 dark:text-blue-400"/>
+                     <span className=" text-blue-500 dark:text-blue-400"> Previous Attempts to resolve the issue :-</span>
+                      {question.attempts ? (
+                        <>
+                          <span className={!isAttemptsExpanded ? 'line-clamp-1' : ''}>
+                            {question.attempts}
+                          </span>
+                          {question.attempts.length > 50 && (
+                            <button
+                              onClick={() => setIsAttemptsExpanded(!isAttemptsExpanded)}
+                              className="flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 mt-1 text-sm font-medium"
+                            >
+                              {isAttemptsExpanded ? (
+                                <>Show less <ChevronUp className="ml-1 w-4 h-4" /></>
+                              ) : (
+                                <>Read more <ChevronDown className="ml-1 w-4 h-4" /></>
+                              )}
+                            </button>
+                          )}
+                        </>
+                      ) : (
+                        "No attempts recorded"
+                      )}
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
