@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { apiRequest } from '../utils/api';
 import { uploadToCloudinary } from '../utils/cloudinary';
@@ -22,20 +22,27 @@ registerPlugin(
 );
 
 const SubmitQuestion = () => {
-  const categories = [
-    "Waste Management",
-    "Road Maintenance",
-    "Public Safety",
-    "Water Supply",
-    "Sanitation",
-    "Electricity",
-    "Garbage Collection",
-    "Colony Issue",
-    "Public Transport",
-    "Public Health",
-    "Pollution",
-    "Other",
-  ];
+
+  const [categories, setCategories] = useState([]);
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        const data = await apiRequest('/admin/categories', 'GET', null, token);
+        setCategories(data.map(category => category.name));
+      } catch (error) {
+        console.error('Error fetching categories:', error);
+        // Fallback to default categories if API fails
+        setCategories([
+          "Waste Management", "Road Maintenance", "Public Safety", "Water Supply",
+          "Sanitation", "Electricity", "Garbage Collection", "Colony Issue",
+          "Public Transport", "Public Health", "Pollution", "Other",
+        ]);
+      }
+    };
+
+    fetchCategories();
+  }, []);
 
   const [formData, setFormData] = useState({
     title: '',

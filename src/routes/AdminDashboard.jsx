@@ -5,8 +5,8 @@ import Analytics from '../components/admin/Analytics';
 import SystemSettings from '../components/admin/SystemSettings';
 import ContentModeration from '../components/admin/ContentModeration';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/Tabs';
-import { Users, Flag, BarChart2, Settings, FileText } from 'lucide-react';
-
+import { Users, Flag, BarChart2, Settings, FileText , List} from 'lucide-react';
+import CategoryManagement from '../components/admin/CategoryManagement';
 const AdminDashboard = () => {
   return (
     <div className="container mx-auto px-4 py-8">
@@ -30,6 +30,10 @@ const AdminDashboard = () => {
             <FileText size={20} />
             <span>Content Moderation</span>
           </TabsTrigger>
+          <TabsTrigger value="categories" className="flex items-center space-x-2">
+            <List size={20} />
+            <span>Categories</span>
+          </TabsTrigger>
           <TabsTrigger value="settings" className="flex items-center space-x-2">
             <Settings size={20} />
             <span>Settings</span>
@@ -50,6 +54,10 @@ const AdminDashboard = () => {
 
         <TabsContent value="content">
           <ContentModeration />
+        </TabsContent>
+
+        <TabsContent value="categories">
+          <CategoryManagement />
         </TabsContent>
 
         <TabsContent value="settings">

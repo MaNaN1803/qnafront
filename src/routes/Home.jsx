@@ -18,17 +18,33 @@ L.Icon.Default.mergeOptions({
 const Home = () => {
   const [questions, setQuestions] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [categories, setCategories] = useState([]);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [showMap, setShowMap] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
   const categoryParam = searchParams.get("category");
   const navigate = useNavigate();
 
-  const categories = [
-    "Waste Management", "Road Maintenance", "Public Safety", "Water Supply",
-    "Sanitation", "Electricity", "Garbage Collection", "Colony Issue",
-    "Public Transport", "Public Health", "Pollution", "Other",
-  ];
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        const data = await apiRequest('/admin/categories', 'GET', null, token);
+        setCategories(data.map(category => category.name));
+      } catch (error) {
+        console.error('Error fetching categories:', error);
+        // Fallback to default categories if API fails
+        setCategories([
+          "Waste Management", "Road Maintenance", "Public Safety", "Water Supply",
+          "Sanitation", "Electricity", "Garbage Collection", "Colony Issue",
+          "Public Transport", "Public Health", "Pollution", "Other",
+        ]);
+      }
+    };
+
+    fetchCategories();
+  }, []);
 
   useEffect(() => {
     const fetchQuestions = async () => {
