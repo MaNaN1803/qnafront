@@ -23,6 +23,8 @@ const Home = () => {
   const [showMap, setShowMap] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
   const categoryParam = searchParams.get("category");
+  const [isCategoryVisible, setIsCategoryVisible] = useState(false);
+
   const navigate = useNavigate();
 
 
@@ -242,7 +244,7 @@ const Home = () => {
 
         <div className="flex flex-col lg:flex-row gap-6">
           {/* Sidebar */}
-          <div className={`lg:w-1/4 ${isSidebarOpen ? "block" : "hidden"} lg:block`}>
+          <div className={`lg:w-1/4 ${isSidebarOpen || isCategoryVisible ? "block" : "hidden"} lg:block`}>
             <div className="bg-white dark:bg-gray-800 p-4 shadow rounded-lg mb-6 sticky top-4">
               <h2 className="text-lg font-semibold mb-4 dark:text-white">Categories</h2>
               <ul className="space-y-2">
@@ -262,34 +264,55 @@ const Home = () => {
 
           {/* Main Content */}
           <div className="lg:w-3/4">
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-xl sm:text-2xl font-semibold dark:text-white">
-                {categoryParam ? `${categoryParam} Questions` : "Latest Questions"}
-              </h2>
-              
-              {/* View Toggle */}
-              <button
-                onClick={() => setShowMap(!showMap)}
-                className={`
-                  flex items-center gap-2 px-4 py-2 rounded-lg
-                  transition-all duration-300
-                  ${showMap ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'}
-                  hover:bg-blue-600 hover:text-white
-                `}
-              >
-                {showMap ? (
-                  <>
-                    <List className="w-4 h-4" />
-                    <span>Show List</span>
-                  </>
-                ) : (
-                  <>
-                    <MapIcon className="w-4 h-4" />
-                    <span>Show Map</span>
-                  </>
-                )}
-              </button>
-            </div>
+          <div className="flex justify-between items-center mb-6 flex-wrap">
+  <h2 className="text-xl sm:text-2xl sm:mb-2 font-semibold dark:text-white w-full sm:w-auto">
+    {categoryParam ? `${categoryParam} Questions` : "Latest Questions"}
+  </h2>
+
+  {/* View Toggle */}
+  <button
+    onClick={() => setShowMap(!showMap)}
+    className={`
+      flex items-center gap-2 px-4 py-2 rounded-lg
+      transition-all duration-300
+      ${showMap ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'}
+      hover:bg-blue-600 hover:text-white
+    `}
+  >
+    {showMap ? (
+      <>
+        <List className="w-4 h-4" />
+        <span>Show List</span>
+      </>
+    ) : (
+      <>
+        <MapIcon className="w-4 h-4" />
+        <span>Show Map</span>
+      </>
+    )}
+  </button>
+
+  {/* Toggle for Categories */}
+  <button
+    onClick={() => setIsCategoryVisible(!isCategoryVisible)}
+    className="lg:hidden flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-200 text-gray-700 hover:bg-gray-300 sm:mt-0"
+  >
+    {isCategoryVisible ? (
+      <>
+        <List className="w-4 h-4" />
+        <span>Hide Categories</span>
+      </>
+    ) : (
+      <>
+        <List className="w-4 h-4" />
+        <span>Show Categories</span>
+      </>
+    )}
+  </button>
+</div>
+
+
+           
 
             {loading ? (
               <p className="text-center text-gray-500 dark:text-gray-400">Loading questions...</p>
