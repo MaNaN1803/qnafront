@@ -154,7 +154,7 @@ const Navbar = ({ darkMode, setDarkMode }) => {
             placeholder="Search questions..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className={`px-4 py-2 border ${darkMode ? 'bg-gray-700 border-gray-600' : 'border-gray-300'} rounded-l-md focus:outline-none focus:ring-2 focus:ring-gray-600 w-full text-white transition-colors duration-300`}
+            className={`px-4 py-2 border ${darkMode ? 'bg-gray-700 border-gray-600' : 'border-gray-300'} rounded-l-md focus:outline-none focus:ring-2 focus:ring-gray-600 w-full text-black transition-colors duration-300`}
           />
           <button
             type="submit"
