@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { apiRequest } from "../utils/api";
 import { ThumbsUp, ThumbsDown } from "lucide-react";
-
+import { toast } from "react-toastify";
 const SearchResults = () => {
   const location = useLocation();
   const query = new URLSearchParams(location.search).get("q");
@@ -15,7 +15,7 @@ const SearchResults = () => {
       try {
         setLoading(true);
         const token = localStorage.getItem("token");
-        const response = await apiRequest(`/search?q=${query}`, "GET", null, token);
+        const response = await apiRequest(`/search?q=${query}&populate=user`, "GET", null, token);
         setResults(response);
       } catch (err) {
         setError("Failed to fetch search results. Please try again.");
@@ -124,7 +124,8 @@ const SearchResults = () => {
                     <span className="hidden sm:inline">•</span>
                     <span><strong>Views:</strong> {question.views || 0}</span>
                     <span className="hidden sm:inline">•</span>
-                    <span><strong>Posted by:</strong> {question.user?.name || "Anonymous"}</span>
+                    
+                    
                   </div>
                 </div>
                 <div className="w-full sm:w-auto flex sm:flex-col justify-between sm:text-right gap-4">
