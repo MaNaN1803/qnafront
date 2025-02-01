@@ -43,11 +43,8 @@ npm install
 ```
 
 ### Setup Environment Variables
-Create a `.env` file in the `frontend` directory and add the following:
 ```sh
-VITE_API_BASE_URL=<your_backend_api_url>
-VITE_CLOUDINARY_CLOUD_NAME=<your_cloudinary_cloud_name>
-VITE_GOOGLE_RECAPTCHA_SITE_KEY=<your_recaptcha_site_key>
+access utils folder for the api configuration
 ```
 
 ### Run the Development Server
