@@ -19,7 +19,7 @@ This is the frontend of a **MERN-based Question-and-Answer Platform** designed f
 - **TailwindCSS** (Styling framework)
 - **React Router** (Navigation & routing)
 - **Axios** (API communication)
-- **Leaflet.js & React-Leaflet** (Maps & Geolocation)
+- **Leaflet.js & React-Leaflet Leaflet-map-cluster MapBox Maping** (Maps & Geolocation)
 - **Cloudinary** (Image Uploads)
 - **Filepond** (File Upload Handling)
 - **React Google Recaptcha** (Spam protection)
