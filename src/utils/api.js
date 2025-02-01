@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // let API_URL = 'http://localhost:5000/api';
-let API_URL = 'https://qna-4cfa.onrender.com/api';
+let API_URL = 'https://qnabackend-n33r.onrender.com/api';
 
 export const apiRequest = async (url, method = 'GET', body = null, token = '', config = {}) => {
   try {
